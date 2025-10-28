@@ -38,7 +38,6 @@
   <h1>Happy Birthday, Love ❤️</h1>
   <p>Today is all about you! Enjoy games, stories, surprises, and more!</p>
   <button class="btn" onclick="startMusic()">Play Music</button>
-  <audio id="bg-music" src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Happy_Birthday_to_You_Piano%2C_by_Myuu.mp3" preload="auto"></audio>
   <button class="btn" onclick="toggleMusic()">Pause/Play</button>
 </div>
 
@@ -215,34 +214,15 @@ drawCake();
     [Aur main sirf tera… hamesha ka Aditya.] 💍</p>
   </div>
 </div>
-</div>
-<script>
-function openGift(){
-  giftMsg.style.display='block';
-  confettiBurst();
-  flowerRainStart();
-  setTimeout(()=>{giftMsg.style.display='none';},200000);
-}
-</script>
-
 
 <script>
+  // Single openGift implementation (no duplicates)
   const giftMsg = document.getElementById('giftMsg');
   function openGift(){
     giftMsg.style.display = 'block';
     confettiBurst();
     flowerRainStart();
     setTimeout(()=>{giftMsg.style.display = 'none';}, 200000);
-  }
-
-  // Dummy confetti & flower functions - replace with your actual implementations
-  function confettiBurst() {
-    console.log('Confetti burst!');
-    // Implement actual confetti code here
-  }
-  function flowerRainStart() {
-    console.log('Flower rain started!');
-    // Implement actual flower rain code here
   }
 </script>
 
@@ -299,7 +279,7 @@ modal.onclick=function(){modal.style.display='none';}
   <h2>Digital Scratch Card</h2>
   <div style="position:relative;display:inline-block;">
     <canvas id="scratchCanvas" width="280" height="120" style="border-radius:12px;background:#f8b9db;box-shadow:0 2px 8px #fa55a3b2;"></canvas>
-    <div id="revealMsg" style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.12em;color:#85095e;font-weight:700;">(Scratch to reveal!)</div>
+    <div id="revealMsg" style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.12em;color:#85095e;font-weight:700;">(Scratch to[...]
   </div>
 </div>
 <script>
@@ -469,14 +449,34 @@ function showEmojiPicker(){
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 <script>
 function confettiBurst(){
-  confetti.create(confettiArea, {resize:true, useWorker:true})({particleCount:60,spread:120,origin:{y:0.42}});
+  const canvasEl = document.getElementById('confettiArea');
+  if(!canvasEl) return;
+  confetti.create(canvasEl, {resize:true, useWorker:true})({particleCount:60,spread:120,origin:{y:0.42}});
 }
 </script>
 
 <!-- Music Controls -->
 <script>
-function startMusic(){bg-music.play();}
-function toggleMusic(){if(bg-music.paused)bg-music.play();else bg-music.pause();}
+  // Reference the single audio element
+  const bgMusic = document.getElementById('bg-music');
+
+  function startMusic(){
+    if(!bgMusic) return;
+    bgMusic.play().catch(err=>{
+      // Autoplay may be blocked; inform user
+      console.warn('Music play prevented by browser autoplay policy:', err);
+      alert('Autoplay blocked by browser. Please click Play to start music.');
+    });
+  }
+
+  function toggleMusic(){
+    if(!bgMusic) return;
+    if(bgMusic.paused){
+      bgMusic.play().catch(err=>console.warn('Play failed:', err));
+    }else{
+      bgMusic.pause();
+    }
+  }
 </script>
 </body>
 </html>
