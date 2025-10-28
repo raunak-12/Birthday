@@ -20,13 +20,34 @@
     .badge{background:var(--gold);color:var(--pink);border-radius:99px;padding:0.4em 1.3em;font-size:1.07em;}
     .confetti-canvas, .flower-canvas {position:fixed; left:0; top:0; pointer-events:none; width:100vw; height:100vh; z-index:9999;}
     #flowerArea {pointer-events:none;}
+    .small {font-size:0.9em;}
+    /* Lightbox/modal */
+    #modal {position:fixed;inset:0;background:rgba(6,0,18,0.66);display:none;align-items:center;justify-content:center;z-index:9999;}
+    #modalImg{max-width:92vw;max-height:87vh;border-radius:16px;}
+    /* Wheel modal */
+    #wheelModal {position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:10005;}
+    #wheelWrap {background:rgba(255,255,255,0.03);padding:1em;border-radius:12px;text-align:center;}
+    #wheelCanvas {background:transparent;border-radius:12px;}
+    /* Scratch card layout - two canvases stacked */
+    #scratchArea {position:relative;display:inline-block;width:360px;height:140px;}
+    #msgCanvas, #overlayCanvas {position:absolute;left:0;top:0;border-radius:12px;}
+    #msgCanvas {z-index:1;}
+    #overlayCanvas {z-index:2;box-shadow:0 2px 8px #fa55a3b2;cursor:crosshair;}
+    #revealMsg {position:relative;margin-top:10px;color:#ffdede;font-weight:700;min-height:22px;}
+    /* Button disabled look */
+    .btn[disabled]{opacity:0.6;cursor:not-allowed;}
+    /* small visual state for play button */
+    .btn-playing {background:linear-gradient(90deg,#7ee787,#34d399);color:#04250a;}
   </style>
 </head>
 <body>
 <!-- Confetti & Flower Animations-->
 <canvas id="confettiArea" class="confetti-canvas"></canvas>
 <div id="flowerArea"></div>
-<audio id="bg-music" src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Happy_Birthday_to_You_Piano%2C_by_Myuu.mp3" preload="auto"></audio>
+
+<!-- Audio element (open-source CC / public domain file) -->
+<!-- Open-source "Happy Birthday" piano on Wikimedia Commons -->
+<audio id="bg-music" src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Happy_Birthday_to_You_Piano%2C_by_Myuu.mp3" preload="auto" loop playsinline></audio>
 
 <!-- Top Badge Countdown -->
 <div class="center" style="margin-top:1.2em;">
@@ -37,8 +58,8 @@
 <div class="card center" style="margin-top:1.2em;">
   <h1>Happy Birthday, Love ❤️</h1>
   <p>Today is all about you! Enjoy games, stories, surprises, and more!</p>
-  <button class="btn" onclick="startMusic()">Play Music</button>
-  <button class="btn" onclick="toggleMusic()">Pause/Play</button>
+  <button class="btn" id="playBtn">Play Music</button>
+  <button class="btn" id="toggleBtn">Pause</button>
 </div>
 
 <!-- Flower animation trigger when time ends -->
@@ -132,7 +153,9 @@ function drawCake(){
 }
 var blownCandles=0;
 function blowCandle(el){
-  el.querySelector('.flame').style.opacity='0';
+  const flame = el.querySelector('.flame');
+  if(!flame) return;
+  flame.style.opacity='0';
   el.onclick='';
   blownCandles++;
   if(blownCandles===5){
@@ -144,42 +167,10 @@ drawCake();
 </script>
 
 <style>
-  #giftSection {
-    text-align: center;
-    margin: 2em auto;
-    max-width: 500px;
-  }
-  .love-poem {
-    font-family: 'Dancing Script', cursive;
-    font-size: 1.3em;
-    background: linear-gradient(45deg, #ff6b81, #ffd166);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
-    text-shadow: 0 2px 6px rgba(255, 107, 129, 0.5);
-    line-height: 1.6;
-    user-select: none;
-    margin-top: 1em;
-  }
-  .love-poem p {
-    margin: 1em 0;
-  }
-  #giftBoxBtn {
-    display: inline-block;
-    width: 70px;
-    height: 70px;
-    background: linear-gradient(135deg, #ff6b81 70%, #ffd166 100%);
-    border-radius: 16px;
-    font-size: 38px;
-    line-height: 70px;
-    box-shadow: 0 3px 26px #ff6b81a2;
-    cursor: pointer;
-    user-select: none;
-  }
+  #giftSection { text-align: center; margin: 2em auto; max-width: 500px; }
+  .love-poem { font-family: 'Dancing Script', cursive; font-size: 1.3em; background: linear-gradient(45deg, #ff6b81, #ffd166); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; text-shadow: 0 2px 6px rgba(255, 107, 129, 0.5); line-height: 1.6; user-select: none; margin-top: 1em; }
+  #giftBoxBtn { display: inline-block; width: 70px; height: 70px; background: linear-gradient(135deg, #ff6b81 70%, #ffd166 100%); border-radius: 16px; font-size: 38px; line-height: 70px; box-shadow: 0 3px 26px #ff6b81a2; cursor: pointer; user-select: none; }
 </style>
-
-
 
 <div class="section card" id="giftSection">
   <h2>Surprise Gift Box</h2>
@@ -188,35 +179,17 @@ drawCake();
   </div>
   <div id="giftMsg" class="love-poem" style="display:none;">
     <p>💖 [Tere Naam, Anju] 💖</p>
-
-    <p>[Har subah teri yaadon se hoti hai shuru,]<br>
-    [Dil ke kone mein basa hai tu, meri Anju.] 🌸</p>
-
-    <p>[Doori ke raaste bade lamba lage,]<br>
-    [Par tera pyaar har pal mere saath chale.] 💫</p>
-
-    <p>[Teri hasi meri duniya ka noor hai,]<br>
-    [Tere bina sab kuch adhura zaroor hai.] 🌷</p>
-
-    <p>[Kabhi rooth jaati hai, kabhi muskura deti hai,]<br>
-    [Meri zindagi ko har rang de jaati hai.] 🌈</p>
-
-    <p>[Wo pehla milna, wo pehli baat,]<br>
-    [Aaj bhi deta hai dil ko sukoon aur raahat ka ehsaas.] 💌</p>
-
-    <p>[Tu keh nahi paati, par main samajh jaata hoon,]<br>
-    [Tere har khamoshi mein apna jahaan paata hoon.] ❤️</p>
-
-    <p>[11 saal ka safar, yaadon ka samaan,]<br>
-    [Har pal ke saath badha yeh rishta mahaan.] ⏳</p>
-
-    <p>[Tu meri dua, mera sapna, meri duniya,]<br>
-    [Aur main sirf tera… hamesha ka Aditya.] 💍</p>
+    <p>[Har subah teri yaadon se hoti hai shuru,]<br>[Dil ke kone mein basa hai tu, meri Anju.] 🌸</p>
+    <p>[Doori ke raaste bade lamba lage,]<br>[Par tera pyaar har pal mere saath chale.] 💫</p>
+    <p>[Teri hasi meri duniya ka noor hai,]<br>[Tere bina sab kuch adhura zaroor hai.] 🌷</p>
+    <p>[Kabhi rooth jaati hai, kabhi muskura deti hai,]<br>[Meri zindagi ko har rang de jaati hai.] 🌈</p>
+    <p>[Wo pehla milna, wo pehli baat,]<br>[Aaj bhi deta hai dil ko sukoon aur raahat ka ehsaas.] 💌</p>
+    <p>[Tu keh nahi paati, par main samajh jaata hoon,]<br>[Tere har khamoshi mein apna jahaan paata hoon.] ❤️</p>
+    <p>[11 saal ka safar, yaadon ka samaan,]<br>[Har pal ke saath badha yeh rishta mahaan.] ⏳</p>
+    <p>[Tu meri dua, mera sapna, meri duniya,]<br>[Aur main sirf tera… hamesha ka Aditya.] 💍</p>
   </div>
 </div>
-
 <script>
-  // Single openGift implementation (no duplicates)
   const giftMsg = document.getElementById('giftMsg');
   function openGift(){
     giftMsg.style.display = 'block';
@@ -227,11 +200,8 @@ drawCake();
 </script>
 
 <div class="section card" style="text-align: center;">
-
   <h2>Timeline: Our Best Moments</h2>
-  <ul style="list-style:none;padding:0;" id="timelineList">
-     <!-- Entries will appear via JS -->
-  </ul>
+  <ul style="list-style:none;padding:0;" id="timelineList"></ul>
 </div>
 <script>
 let timeline=[
@@ -244,7 +214,6 @@ timelineList.innerHTML=timeline.map(item=>
      <span style="font-weight:700;font-size:1.1em;">${item.title}</span>
      <span class="muted"> • ${item.date}</span><br/>
      <span>${item.text}</span><br/>
-    
    </li>`
 ).join('');
 </script>
@@ -252,81 +221,148 @@ timelineList.innerHTML=timeline.map(item=>
 <div class="section card center" style="max-width: 960px; margin: auto;">
   <h2>Gallery</h2>
   <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;" id="gallery">
-    <img src="https://lh3.googleusercontent.com/d/1U1pPz1DM7kE2sLVEm5DWYllHR2qqLyug" 
-      alt="Anjali's photo" 
-      style="width:100%; object-fit:contain; border-radius:8px; cursor:pointer;" 
-      onclick="showLightbox('https://lh3.googleusercontent.com/d/1U1pPz1DM7kE2sLVEm5DWYllHR2qqLyug')">
-    <img src="images/photo2.jpg" style="width:100%; object-fit:contain; border-radius:8px; cursor:pointer;" onclick="showLightbox('images/photo2.jpg')">
-    <img src="images/photo3.jpg" style="width:100%; object-fit:contain; border-radius:8px; cursor:pointer;" onclick="showLightbox('images/photo3.jpg')">
+    <img src="https://lh3.googleusercontent.com/d/1U1pPz1DM7kE2sLVEm5DWYllHR2qqLyug" alt="Anjali's photo" style="width:100%; object-fit:contain; border-radius:8px; cursor:pointer;" data-src="https://lh3.googleusercontent.com/d/1U1pPz1DM7kE2sLVEm5DWYllHR2qqLyug">
+    <img src="images/photo2.jpg" style="width:100%; object-fit:contain; border-radius:8px; cursor:pointer;" data-src="images/photo2.jpg">
+    <img src="images/photo3.jpg" style="width:100%; object-fit:contain; border-radius:8px; cursor:pointer;" data-src="images/photo3.jpg">
   </div>
 </div>
 
-
-
-</div>
-<div id="modal" style="position:fixed;inset:0;background:rgba(6,0,18,0.66);display:none;align-items:center;justify-content:center;z-index:9999;">
-  <img id="modalImg" src="" style="max-width:92vw;max-height:87vh;border-radius:16px;">
-</div>
+<div id="modal"><img id="modalImg" src=""></div>
 <script>
-function showLightbox(src){
-  modalImg.src=src;
-  document.getElementById('modal').style.display='flex';
-}
-modal.onclick=function(){modal.style.display='none';}
+const modal = document.getElementById('modal');
+const modalImg = document.getElementById('modalImg');
+document.querySelectorAll('#gallery img').forEach(img=>{
+  img.addEventListener('click', ()=>{
+    modalImg.src = img.getAttribute('data-src') || img.src;
+    modal.style.display = 'flex';
+  });
+});
+modal.addEventListener('click', ()=> modal.style.display='none');
 </script>
 
+<!-- Scratch Card: two stacked canvases to avoid text overlap -->
 <div class="section card center">
   <h2>Digital Scratch Card</h2>
-  <div style="position:relative;display:inline-block;">
-    <canvas id="scratchCanvas" width="280" height="120" style="border-radius:12px;background:#f8b9db;box-shadow:0 2px 8px #fa55a3b2;"></canvas>
-    <div id="revealMsg" style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:1.12em;color:#85095e;font-weight:700;">(Scratch to[...]
+  <div id="scratchArea">
+    <canvas id="msgCanvas" width="360" height="140"></canvas>
+    <canvas id="overlayCanvas" width="360" height="140"></canvas>
+    <div id="revealMsg">(Scratch to reveal your message)</div>
   </div>
 </div>
+
 <script>
-const scratchMsg = "You mean the world to me, Anjali! 💖";
-const canvas = document.getElementById('scratchCanvas');
-const ctx = canvas.getContext('2d');
-function drawScratchOverlay(){
-  ctx.fillStyle='#dad1d7';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-  ctx.font = '800 22px Poppins';
-  ctx.fillStyle='#888';
-  ctx.textAlign='center';
-  ctx.fillText('Scratch here!',canvas.width/2,canvas.height/2);
-}
-drawScratchOverlay();
-let scrReveal = false;
-canvas.addEventListener('pointerdown',function(e){
-  if(scrReveal) return;
-  let drawing=true;
-  function draw(e){
-    if(drawing){
-      const rect=canvas.getBoundingClientRect();
-      const x=e.clientX-rect.left;
-      const y=e.clientY-rect.top;
-      ctx.globalCompositeOperation='destination-out';
-      ctx.beginPath();
-      ctx.arc(x,y,18,0,Math.PI*2);
-      ctx.fill();
-      ctx.globalCompositeOperation='source-over';
+(function(){
+  const msgCanvas = document.getElementById('msgCanvas');
+  const overlayCanvas = document.getElementById('overlayCanvas');
+  const revealMsgEl = document.getElementById('revealMsg');
+  const msgCtx = msgCanvas.getContext('2d');
+  const overCtx = overlayCanvas.getContext('2d');
+
+  const message = "You mean the world to me, Anjali! 💖";
+
+  // draw the message on the bottom canvas
+  function drawMessage(){
+    msgCtx.clearRect(0,0,msgCanvas.width,msgCanvas.height);
+    msgCtx.fillStyle = '#ffdede';
+    msgCtx.fillRect(0,0,msgCanvas.width,msgCanvas.height);
+    msgCtx.fillStyle = '#85095e';
+    msgCtx.font = '20px Poppins, sans-serif';
+    msgCtx.textAlign = 'center';
+    msgCtx.textBaseline = 'middle';
+    // wrap text if needed
+    const maxWidth = msgCanvas.width - 20;
+    const words = message.split(' ');
+    let line = '', y = msgCanvas.height/2 - 8;
+    const lines = [];
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + ' ';
+      const metrics = msgCtx.measureText(testLine);
+      if (metrics.width > maxWidth && n > 0) {
+        lines.push(line.trim());
+        line = words[n] + ' ';
+      } else {
+        line = testLine;
+      }
+    }
+    lines.push(line.trim());
+    // adjust vertical start to center multiline
+    const lineHeight = 24;
+    const totalHeight = lines.length * lineHeight;
+    let startY = (msgCanvas.height - totalHeight)/2 + lineHeight/2;
+    for(let i=0;i<lines.length;i++){
+      msgCtx.fillText(lines[i], msgCanvas.width/2, startY + i*lineHeight);
     }
   }
-  function up(e){drawing=false;}
-  document.addEventListener('pointermove',draw);
-  document.addEventListener('pointerup',up,{once:true});
-  setTimeout(()=>{
-    let img = ctx.getImageData(0,0,canvas.width,canvas.height);
-    let transparent=0;
-    for(let i=3;i<img.data.length;i+=4){if(img.data[i]==0)transparent++;}
-    if((transparent/(canvas.width*canvas.height))*100>35){
-      scrReveal=true;
-      revealMsg.textContent=scratchMsg;
+
+  // draw the overlay on the top canvas (no overlapping text on the bottom)
+  function drawOverlay(){
+    overCtx.clearRect(0,0,overlayCanvas.width, overlayCanvas.height);
+    overCtx.fillStyle = '#dad1d7';
+    overCtx.fillRect(0,0,overlayCanvas.width, overlayCanvas.height);
+    overCtx.fillStyle = '#666';
+    overCtx.font = '700 20px Poppins, sans-serif';
+    overCtx.textAlign = 'center';
+    overCtx.textBaseline = 'middle';
+    overCtx.fillText('Scratch here!', overlayCanvas.width/2, overlayCanvas.height/2);
+  }
+
+  drawMessage();
+  drawOverlay();
+
+  let drawing = false;
+
+  function getPointerPos(e, canvas) {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0].clientX);
+    const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0].clientY);
+    return { x: clientX - rect.left, y: clientY - rect.top };
+  }
+
+  function pointerDown(e){
+    drawing = true;
+    draw(e);
+  }
+  function draw(e){
+    if(!drawing) return;
+    const pos = getPointerPos(e, overlayCanvas);
+    overCtx.globalCompositeOperation = 'destination-out';
+    overCtx.beginPath();
+    overCtx.arc(pos.x, pos.y, 22, 0, Math.PI*2);
+    overCtx.fill();
+    overCtx.closePath();
+    overCtx.globalCompositeOperation = 'source-over';
+  }
+  function pointerUp(){
+    if(!drawing) return;
+    drawing = false;
+    // compute percent cleared on overlay canvas
+    const img = overCtx.getImageData(0,0,overlayCanvas.width,overlayCanvas.height);
+    let transparent = 0;
+    for(let i=3;i<img.data.length;i+=4){
+      if(img.data[i] === 0) transparent++;
+    }
+    const totalPixels = overlayCanvas.width * overlayCanvas.height;
+    const cleared = (transparent / totalPixels) * 100;
+    if(cleared > 30){
+      // reveal by removing overlay entirely
+      overlayCanvas.style.display = 'none';
+      revealMsgEl.textContent = message;
       confettiBurst();
       flowerRainStart();
-      setTimeout(()=>{document.getElementById('revealMsg').textContent="";},6000);
+      setTimeout(()=>{ revealMsgEl.textContent = ""; overlayCanvas.style.display = 'block'; drawOverlay(); }, 7000);
     }
-  },700);
-});
+  }
+
+  overlayCanvas.addEventListener('pointerdown', pointerDown);
+  overlayCanvas.addEventListener('pointermove', draw);
+  overlayCanvas.addEventListener('pointerup', pointerUp);
+  overlayCanvas.addEventListener('pointerleave', pointerUp);
+
+  // Touch fallback
+  overlayCanvas.addEventListener('touchstart', function(e){ e.preventDefault(); pointerDown(e.touches[0]); }, {passive:false});
+  overlayCanvas.addEventListener('touchmove', function(e){ e.preventDefault(); draw(e.touches[0]); }, {passive:false});
+  overlayCanvas.addEventListener('touchend', function(e){ e.preventDefault(); pointerUp(); }, {passive:false});
+})();
 </script>
 
 <div class="section card center">
@@ -344,19 +380,20 @@ let heartsMsg=[
   "Wishing you endless happiness."
 ];
 function makeHearts(){
-  heartsWrap.innerHTML='';
+  const wrap = document.getElementById('heartsWrap');
+  wrap.innerHTML='';
   for(let i=0;i<10;i++){
     let btn=document.createElement('button');
     btn.className='btn';
     btn.textContent='❤';
-    btn.onclick=()=>{alert(heartsMsg[Math.floor(Math.random()*heartsMsg.length)]);confettiBurst();}
-    heartsWrap.appendChild(btn);
+    btn.onclick=()=>{ alert(heartsMsg[Math.floor(Math.random()*heartsMsg.length)]); confettiBurst(); };
+    wrap.appendChild(btn);
   }
 }
 makeHearts();
 </script>
 
-<!-- Wish Wall for Friends/Family & Anjali -->
+<!-- Wish Wall -->
 <div class="section card center" id="wishWallWrap">
   <h2>Wish Wall: Messages from Friends & Family</h2>
   <div id="wishWall"></div>
@@ -367,36 +404,40 @@ makeHearts();
 </div>
 <script>
 function renderWishWall(){
+  const wishWall = document.getElementById('wishWall');
   wishWall.innerHTML='';
   let wishes=JSON.parse(localStorage.getItem('anjaliWishes')||'[]');
   wishes.forEach(msg=>{
     let div=document.createElement('div');
     div.className='card muted';
+    div.style.margin = '6px 0';
     div.textContent=msg;
     wishWall.appendChild(div);
   });
 }
-wishBtn.onclick=function(){
-  const txt=wishInput.value.trim();
-  if(!txt)return;
-  let wishes=JSON.parse(localStorage.getItem('anjaliWishes')||'[]');
+document.getElementById('wishBtn').onclick = function(){
+  const wishInput = document.getElementById('wishInput');
+  const txt = wishInput.value.trim();
+  if(!txt) return;
+  let wishes = JSON.parse(localStorage.getItem('anjaliWishes')||'[]');
   wishes.push(txt);
-  localStorage.setItem('anjaliWishes',JSON.stringify(wishes.slice(-40)));
+  localStorage.setItem('anjaliWishes', JSON.stringify(wishes.slice(-40)));
   wishInput.value='';
   renderWishWall();
-}
+};
 renderWishWall();
 </script>
 
-<!-- Birthday Letter: Typewriter Effect -->
+<!-- Birthday Letter -->
 <div class="section card">
   <h2>Your Birthday Letter</h2>
   <div id="letterText" style="white-space:pre-line;color:#fff;background:rgba(255,255,255,0.02);padding:1em;border-radius:10px;"></div>
-  <button class="btn" onclick="typeLetter()">Reveal Letter</button>
+  <button class="btn" id="revealLetterBtn">Reveal Letter</button>
 </div>
 <script>
 const fullLetter=`My dearest Anjali,\n\nMay every wish come true.\nFrom fun chats, first calls, to today—your presence is my joy.\n\nHappy birthday, Babu. Always yours,\nAdi.`;
-function typeLetter(){
+document.getElementById('revealLetterBtn').addEventListener('click', ()=>{
+  const letterText = document.getElementById('letterText');
   letterText.textContent='';
   let i=0;
   const speed=33;
@@ -404,18 +445,29 @@ function typeLetter(){
     letterText.textContent+=fullLetter[i]||'';
     i++;if(i>=fullLetter.length){clearInterval(id);}
   },speed);
-}
+});
 </script>
 
-<!-- Extra: Jokes, Quizzes, RSVP Poll, Spin-the-Wheel, Emojis, Party Mode, Daily Story, Easter Egg, Cards, Filters, Red Carpet, Poem Gen, Audio Wish, Calendar Badge -->
 <div class="section card center">
   <h2>Fun Extras</h2>
   <button class="btn" onclick="showJoke()">Birthday Joke</button>
   <button class="btn" onclick="partyMode()">Party Mode!</button>
-  <button class="btn" onclick="spinWheel()">Spin the Surprise Wheel</button>
+  <button class="btn" id="spinWheelBtn">Spin the Surprise Wheel</button>
   <button class="btn" onclick="showQuiz()">Birthday Quiz</button>
   <button class="btn" onclick="showEmojiPicker()">Pick Today’s Mood</button>
 </div>
+
+<!-- Wheel modal -->
+<div id="wheelModal">
+  <div id="wheelWrap">
+    <canvas id="wheelCanvas" width="360" height="360"></canvas>
+    <div style="margin-top:10px;">
+      <button class="btn" id="doSpin">Spin</button>
+      <button class="btn" id="closeWheel">Close</button>
+    </div>
+  </div>
+</div>
+
 <script>
 function showJoke(){alert("Why do birthday candles love parties? They get to go out in style!");}
 function partyMode(){
@@ -423,19 +475,113 @@ function partyMode(){
   confettiBurst();flowerRainStart();
   setTimeout(()=>{document.body.style.background='linear-gradient(180deg,var(--bg1),var(--bg2))'; flowerRainStop();},10000);
 }
-function spinWheel(){
-  let options=["Virtual Hug","Gift Card","Poem","Special Compliment","Extra Confetti"];
-  alert("Your surprise: "+options[Math.floor(Math.random()*options.length)]);
-  confettiBurst();flowerRainStart();
-}
 function showQuiz(){
   let q=prompt("Quiz: What year did you meet Adi?");
-  if(q=='2014'){alert("Correct!");confettiBurst();}else{alert("Try again!");}
+  if(q==='2014'){alert("Correct!");confettiBurst();}else{alert("Try again!");}
 }
 function showEmojiPicker(){
   let options=["😊","😁","🥳","😍","🤘","🤗"];
   alert("Mood set to "+options[Math.floor(Math.random()*options.length)]);
 }
+
+// Spin wheel implementation (visual + corrected result calculation)
+(function(){
+  const options = ["Virtual Hug","Gift Card","Poem","Special Compliment","Extra Confetti","Surprise Call","Movie Night"];
+  const canvas = document.getElementById('wheelCanvas');
+  const ctx = canvas.getContext('2d');
+  const center = canvas.width/2;
+  const radius = center - 6;
+  let isSpinning = false;
+  let rotation = 0; // radians
+
+  function drawWheel(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const segment = (2*Math.PI)/options.length;
+    for(let i=0;i<options.length;i++){
+      const start = rotation + i*segment;
+      const end = start + segment;
+      ctx.beginPath();
+      ctx.moveTo(center, center);
+      ctx.arc(center, center, radius, start, end);
+      ctx.closePath();
+      ctx.fillStyle = (i%2===0) ? '#ffdede' : '#ffd9b3';
+      ctx.fill();
+      // text
+      ctx.save();
+      ctx.translate(center, center);
+      ctx.rotate(start + segment/2);
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#6b2b3a';
+      ctx.font = 'bold 14px Poppins, sans-serif';
+      ctx.fillText(options[i], radius - 8, 6);
+      ctx.restore();
+    }
+    // draw pointer at top
+    ctx.fillStyle = '#fff';
+    ctx.beginPath();
+    ctx.moveTo(center, 6);
+    ctx.lineTo(center-12, 26);
+    ctx.lineTo(center+12, 26);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  function animateTo(targetRotation, duration=4200){
+    if(isSpinning) return;
+    isSpinning = true;
+    const start = performance.now();
+    const initial = rotation;
+    function frame(t){
+      const elapsed = t - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      rotation = initial + (targetRotation - initial) * eased;
+      drawWheel();
+      if(progress < 1){
+        requestAnimationFrame(frame);
+      } else {
+        isSpinning = false;
+        // compute landed index accurately:
+        const segment = (2*Math.PI)/options.length;
+        // pointer angle (top) in canvas coordinates is -Math.PI/2, convert to 0..2pi:
+        const pointerAngle = (3*Math.PI)/2; // same as -PI/2 but positive
+        // normalize rotation to 0..2PI
+        const normalized = (rotation % (2*Math.PI) + 2*Math.PI) % (2*Math.PI);
+        // i such that rotation + i*segment + segment/2 === pointerAngle (mod 2pi)
+        const raw = (pointerAngle - normalized - segment/2);
+        const index = ((Math.floor(((raw % (2*Math.PI)) + (2*Math.PI)) % (2*Math.PI) / segment)) + options.length) % options.length;
+        const result = options[index];
+        confettiBurst();
+        flowerRainStart();
+        setTimeout(()=> alert("Your surprise: " + result), 200);
+        document.getElementById('doSpin').disabled = false;
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  document.getElementById('spinWheelBtn').addEventListener('click', ()=> {
+    document.getElementById('wheelModal').style.display = 'flex';
+    drawWheel();
+  });
+  document.getElementById('closeWheel').addEventListener('click', ()=> {
+    document.getElementById('wheelModal').style.display = 'none';
+  });
+  document.getElementById('doSpin').addEventListener('click', ()=>{
+    if(isSpinning) return;
+    const rounds = 6 + Math.floor(Math.random()*3);
+    const targetIndex = Math.floor(Math.random()*options.length);
+    const segment = (2*Math.PI)/options.length;
+    // compute target rotation so that the chosen segment's center ends up at the top pointer
+    const targetRotation = rounds * 2*Math.PI + ( (3*Math.PI)/2 - (targetIndex * segment + segment/2) );
+    document.getElementById('doSpin').disabled = true;
+    animateTo(targetRotation, 4500);
+  });
+
+  // initial draw
+  drawWheel();
+})();
 </script>
 
 <!-- Share & RSVP -->
@@ -455,28 +601,112 @@ function confettiBurst(){
 }
 </script>
 
-<!-- Music Controls -->
+<!-- Music Controls: user-gesture-first playback (create fresh Audio in click handler) -->
 <script>
-  // Reference the single audio element
-  const bgMusic = document.getElementById('bg-music');
+(function(){
+  const AUDIO_SRC = 'https://upload.wikimedia.org/wikipedia/commons/a/a2/Happy_Birthday_to_You_Piano%2C_by_Myuu.mp3';
+  const playBtn = document.getElementById('playBtn');
+  const toggleBtn = document.getElementById('toggleBtn');
+  // active element (may be the <audio id="bg-music"> or a dynamically created Audio)
+  let player = null;
+  let starting = false;
 
-  function startMusic(){
-    if(!bgMusic) return;
-    bgMusic.play().catch(err=>{
-      // Autoplay may be blocked; inform user
-      console.warn('Music play prevented by browser autoplay policy:', err);
-      alert('Autoplay blocked by browser. Please click Play to start music.');
+  // Attempt to use existing <audio id="bg-music"> if available after play
+  const staticAudioEl = document.getElementById('bg-music');
+
+  function adoptPlayer(a){
+    player = a;
+    player.loop = true;
+    player.preload = 'auto';
+    player.volume = 0.9;
+    player.addEventListener('play', ()=> {
+      playBtn.classList.add('btn-playing');
+      playBtn.textContent = 'Playing';
+      toggleBtn.textContent = 'Pause';
+    });
+    player.addEventListener('pause', ()=> {
+      playBtn.classList.remove('btn-playing');
+      playBtn.textContent = 'Play Music';
+      toggleBtn.textContent = 'Play';
     });
   }
 
-  function toggleMusic(){
-    if(!bgMusic) return;
-    if(bgMusic.paused){
-      bgMusic.play().catch(err=>console.warn('Play failed:', err));
-    }else{
-      bgMusic.pause();
+  function createAndPlayAudioFromClick() {
+    // if we already have a player and it's paused, play it
+    if (player) {
+      if (player.paused) return player.play();
+      return Promise.resolve(player);
     }
+    // prefer the static audio element if possible
+    const a = staticAudioEl || new Audio(AUDIO_SRC);
+    // if static one has src but is not loaded, ensure it has the right src
+    if (!staticAudioEl) {
+      a.src = AUDIO_SRC;
+    }
+    adoptPlayer(a);
+    // call play immediately from within click handler (user gesture)
+    return a.play().then(() => player);
   }
+
+  playBtn.addEventListener('click', (ev) => {
+    if (starting) return;
+    starting = true;
+    // Must call play() synchronously from the click: createAndPlayAudioFromClick triggers play() directly
+    createAndPlayAudioFromClick()
+      .catch(err => {
+        console.error('Audio play failed:', err);
+        // show inline hint
+        showAudioHint('Unable to play audio. Check site sound permissions or console (extensions may block audio).');
+      })
+      .finally(()=>{ starting = false; });
+  });
+
+  toggleBtn.addEventListener('click', (ev) => {
+    if (starting) return;
+    if (!player) {
+      starting = true;
+      createAndPlayAudioFromClick()
+        .catch(err => {
+          console.error('Audio play failed (toggle):', err);
+          showAudioHint('Unable to play audio. Check site sound permissions or console.');
+        })
+        .finally(()=>{ starting = false; });
+      return;
+    }
+    if (player.paused) player.play().catch(err=>{
+      console.error('Play failed on toggle:', err);
+      showAudioHint('Unable to resume audio. See console.');
+    });
+    else player.pause();
+  });
+
+  function showAudioHint(text) {
+    let hint = document.getElementById('audio-hint-inline');
+    if (!hint) {
+      hint = document.createElement('div');
+      hint.id = 'audio-hint-inline';
+      hint.style.position = 'fixed';
+      hint.style.bottom = '18px';
+      hint.style.left = '18px';
+      hint.style.padding = '10px 14px';
+      hint.style.background = 'rgba(0,0,0,0.7)';
+      hint.style.color = '#fff';
+      hint.style.borderRadius = '10px';
+      hint.style.zIndex = 10020;
+      hint.style.fontSize = '14px';
+      hint.style.maxWidth = '80vw';
+      document.body.appendChild(hint);
+    }
+    hint.textContent = text;
+    clearTimeout(hint._t);
+    hint._t = setTimeout(()=>{ hint.remove(); }, 6000);
+  }
+
+  console.info('Music controls ready. Click Play to start audio.');
+
+  // keyboard helper
+  document.addEventListener('keydown', (e)=>{ if(e.key==='p'||e.key==='P') toggleBtn.click(); });
+})();
 </script>
 </body>
 </html>
