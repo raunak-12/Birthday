@@ -604,81 +604,49 @@ function confettiBurst(){
 <!-- Music Controls: user-gesture-first playback (create fresh Audio in click handler) -->
 <script>
 (function(){
-  const AUDIO_SRC = 'https://upload.wikimedia.org/wikipedia/commons/a/a2/Happy_Birthday_to_You_Piano%2C_by_Myuu.mp3';
   const playBtn = document.getElementById('playBtn');
   const toggleBtn = document.getElementById('toggleBtn');
-  // active element (may be the <audio id="bg-music"> or a dynamically created Audio)
-  let player = null;
-  let starting = false;
+  const audio = document.getElementById('bg-music');
 
-  // Attempt to use existing <audio id="bg-music"> if available after play
-  const staticAudioEl = document.getElementById('bg-music');
+  // Set up audio element
+  audio.volume = 0.9;
+  audio.loop = true;
 
-  function adoptPlayer(a){
-    player = a;
-    player.loop = true;
-    player.preload = 'auto';
-    player.volume = 0.9;
-    player.addEventListener('play', ()=> {
+  function updateUI(isPlaying) {
+    if (isPlaying) {
       playBtn.classList.add('btn-playing');
       playBtn.textContent = 'Playing';
       toggleBtn.textContent = 'Pause';
-    });
-    player.addEventListener('pause', ()=> {
+    } else {
       playBtn.classList.remove('btn-playing');
       playBtn.textContent = 'Play Music';
       toggleBtn.textContent = 'Play';
+    }
+  }
+
+  playBtn.addEventListener('click', () => {
+    audio.play().then(() => updateUI(true)).catch((err) => {
+      updateUI(false);
+      showAudioHint('Unable to play audio. Please interact with the page or check browser permissions.');
+      console.error('Audio play failed:', err);
     });
-  }
+  });
 
-  function createAndPlayAudioFromClick() {
-    // if we already have a player and it's paused, play it
-    if (player) {
-      if (player.paused) return player.play();
-      return Promise.resolve(player);
-    }
-    // prefer the static audio element if possible
-    const a = staticAudioEl || new Audio(AUDIO_SRC);
-    // if static one has src but is not loaded, ensure it has the right src
-    if (!staticAudioEl) {
-      a.src = AUDIO_SRC;
-    }
-    adoptPlayer(a);
-    // call play immediately from within click handler (user gesture)
-    return a.play().then(() => player);
-  }
-
-  playBtn.addEventListener('click', (ev) => {
-    if (starting) return;
-    starting = true;
-    // Must call play() synchronously from the click: createAndPlayAudioFromClick triggers play() directly
-    createAndPlayAudioFromClick()
-      .catch(err => {
+  toggleBtn.addEventListener('click', () => {
+    if (audio.paused) {
+      audio.play().then(() => updateUI(true)).catch((err) => {
+        updateUI(false);
+        showAudioHint('Unable to play audio. Please interact with the page or check browser permissions.');
         console.error('Audio play failed:', err);
-        // show inline hint
-        showAudioHint('Unable to play audio. Check site sound permissions or console (extensions may block audio).');
-      })
-      .finally(()=>{ starting = false; });
+      });
+    } else {
+      audio.pause();
+      updateUI(false);
+    }
   });
 
-  toggleBtn.addEventListener('click', (ev) => {
-    if (starting) return;
-    if (!player) {
-      starting = true;
-      createAndPlayAudioFromClick()
-        .catch(err => {
-          console.error('Audio play failed (toggle):', err);
-          showAudioHint('Unable to play audio. Check site sound permissions or console.');
-        })
-        .finally(()=>{ starting = false; });
-      return;
-    }
-    if (player.paused) player.play().catch(err=>{
-      console.error('Play failed on toggle:', err);
-      showAudioHint('Unable to resume audio. See console.');
-    });
-    else player.pause();
-  });
+  audio.addEventListener('play', () => updateUI(true));
+  audio.addEventListener('pause', () => updateUI(false));
 
   function showAudioHint(text) {
     let hint = document.getElementById('audio-hint-inline');
@@ -702,9 +670,7 @@ function confettiBurst(){
     hint._t = setTimeout(()=>{ hint.remove(); }, 6000);
   }
 
-  console.info('Music controls ready. Click Play to start audio.');
-
-  // keyboard helper
+  // Keyboard shortcut: P to toggle play/pause
   document.addEventListener('keydown', (e)=>{ if(e.key==='p'||e.key==='P') toggleBtn.click(); });
 })();
 </script>
