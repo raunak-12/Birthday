@@ -4,675 +4,654 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Happy Birthday Love ❤️</title>
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet" />
+
+  <!-- Fonts: Great Vibes (display), Montserrat (body) -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+
   <style>
     /* --- COLORS & FONTS --- */
-    :root{--pink:#ff6b81;--gold:#ffd166;--bg1:#0f172a;--bg2:#1f2937;--muted:#94a3b8;}
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg1),var(--bg2));font-family:'Poppins',sans-serif;color:#f7fafc;}
-    h1,h2{font-family:'Dancing Script',cursive;}
+    :root{
+      --pink:#ff6b81;
+      --pink-2:#ff87a6;
+      --gold:#ffd166;
+      --bg1:#0b1220;
+      --bg2:#1a2633;
+      --muted:#94a3b8;
+      --card-bg: rgba(255,255,255,0.03);
+      --glass: rgba(255,255,255,0.04);
+      --accent-shadow: 0 8px 30px rgba(255,107,129,0.12);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg1),var(--bg2));font-family:'Montserrat',system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;color:#f7fafc;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
+    h1,h2{font-family:'Great Vibes',cursive;margin:0 0 8px 0;}
     a{color:var(--pink);}
     .center{text-align:center;}
-    .muted{color:var(--muted);}
-    .btn{background:var(--pink);color:#fff;padding:0.5em 1.2em;border:none;border-radius:8px;cursor:pointer;}
-    .card{background:rgba(255,255,255,0.04);padding:1em;border-radius:14px;box-shadow:0 2px 12px #023 0.1;}
+    .muted{color:var(--muted);font-size:0.95em;}
+    .btn{background:linear-gradient(90deg,var(--pink),var(--pink-2));color:#fff;padding:0.55em 1.1em;border:none;border-radius:12px;cursor:pointer;font-weight:600;box-shadow:0 6px 18px rgba(255,107,129,0.12);transition:transform .12s ease,box-shadow .12s ease;}
+    .btn:active{transform:translateY(1px)}
+    .btn[disabled]{opacity:0.6;cursor:not-allowed}
+    .card{background:var(--card-bg);padding:1.2em;border-radius:16px;box-shadow:var(--accent-shadow);backdrop-filter: blur(6px);border:1px solid rgba(255,255,255,0.02);margin-bottom:1em;}
     .section{margin-top:1.2em;}
-    .badge{background:var(--gold);color:var(--pink);border-radius:99px;padding:0.4em 1.3em;font-size:1.07em;}
+    .badge{background:linear-gradient(90deg,var(--gold),#ffe69a);color:var(--pink);border-radius:999px;padding:0.45em 1.4em;font-size:1.03em;font-weight:700;display:inline-block;box-shadow:0 8px 24px rgba(255,209,102,0.09);}
     .confetti-canvas, .flower-canvas {position:fixed; left:0; top:0; pointer-events:none; width:100vw; height:100vh; z-index:9999;}
     #flowerArea {pointer-events:none;}
     .small {font-size:0.9em;}
     /* Lightbox/modal */
-    #modal {position:fixed;inset:0;background:rgba(6,0,18,0.66);display:none;align-items:center;justify-content:center;z-index:9999;}
-    #modalImg{max-width:92vw;max-height:87vh;border-radius:16px;}
+    #modal {position:fixed;inset:0;background:rgba(6,0,18,0.66);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;}
+    #modalImg{max-width:92vw;max-height:87vh;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,0.6);}
     /* Wheel modal */
-    #wheelModal {position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:10005;}
-    #wheelWrap {background:rgba(255,255,255,0.03);padding:1em;border-radius:12px;text-align:center;}
-    #wheelCanvas {background:transparent;border-radius:12px;}
+    #wheelModal {position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;align-items:center;justify-content:center;z-index:10005;padding:20px;}
+    #wheelWrap {background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:1em;border-radius:12px;text-align:center;max-width:420px;width:100%;}
+    #wheelCanvas {background:transparent;border-radius:12px;display:block;margin:0 auto;}
     /* Scratch card layout - two canvases stacked */
-    #scratchArea {position:relative;display:inline-block;width:360px;height:140px;}
-    #msgCanvas, #overlayCanvas {position:absolute;left:0;top:0;border-radius:12px;}
-    #msgCanvas {z-index:1;}
-    #overlayCanvas {z-index:2;box-shadow:0 2px 8px #fa55a3b2;cursor:crosshair;}
+    #scratchArea {position:relative;display:inline-block;width:320px;max-width:90vw;height:120px;}
+    #msgCanvas, #overlayCanvas {position:absolute;left:0;top:0;border-radius:12px;display:block;}
+    #msgCanvas{z-index:1}
+    #overlayCanvas{z-index:2;box-shadow:0 2px 8px rgba(250,85,163,0.18);cursor:crosshair;border-radius:12px;}
     #revealMsg {position:relative;margin-top:10px;color:#ffdede;font-weight:700;min-height:22px;}
-    /* Button disabled look */
-    .btn[disabled]{opacity:0.6;cursor:not-allowed;}
-    /* small visual state for play button */
-    .btn-playing {background:linear-gradient(90deg,#7ee787,#34d399);color:#04250a;}
+    /* Gift poem */
+    .love-poem { font-family: 'Great Vibes', cursive; font-size:1.12rem; line-height:1.55; background: linear-gradient(45deg, #ff6b81, #ffd166); -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent; text-shadow: 0 2px 8px rgba(255,107,129,0.18); }
+    /* gallery */
+    .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .gallery-grid img{width:100%;height:120px;object-fit:cover;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.5);cursor:pointer;transition:transform .16s ease}
+    .gallery-grid img:hover{transform:translateY(-6px)}
+    /* responsive */
+    .margin-top-small {
+      margin-top: 0.4em;
+    }
+
+    @media (max-width:880px){
+      .gallery-grid{grid-template-columns:repeat(2,1fr)}
+      #scratchArea{width:280px;height:120px}
+    }
+    @media (max-width:520px){
+      .gallery-grid{grid-template-columns:repeat(1,1fr)}
+      .card{padding:0.9em;border-radius:12px}
+      h1{font-size:2.4rem}
+    }
   </style>
 </head>
 <body>
-<!-- Confetti & Flower Animations-->
-<canvas id="confettiArea" class="confetti-canvas"></canvas>
-<div id="flowerArea"></div>
+  <!-- Confetti & Flower Animations-->
+  <canvas id="confettiArea" class="confetti-canvas"></canvas>
+  <div id="flowerArea"></div>
 
-<!-- Audio element (open-source CC / public domain file) -->
-<!-- Open-source "Happy Birthday" piano on Wikimedia Commons -->
-<audio id="bg-music" src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Happy_Birthday_to_You_Piano%2C_by_Myuu.mp3" preload="auto" loop playsinline></audio>
-
-<!-- Top Badge Countdown -->
-<div class="center" style="margin-top:1.2em;">
-  <span class="badge" id="badgeCount">Loading...</span>
-</div>
-
-<!-- Hero: Title + Music Controls -->
-<div class="card center" style="margin-top:1.2em;">
-  <h1>Happy Birthday, Love ❤️</h1>
-  <p>Today is all about you! Enjoy games, stories, surprises, and more!</p>
-  <button class="btn" id="playBtn">Play Music</button>
-  <button class="btn" id="toggleBtn">Pause</button>
-</div>
-
-<!-- Flower animation trigger when time ends -->
-<script>
-function createFlower() {
-  let flower = document.createElement('div');
-  flower.style.position = 'fixed';
-  flower.style.left = Math.random()*window.innerWidth+'px';
-  flower.style.top = '-50px';
-  flower.style.fontSize = (28+Math.random()*22)+'px';
-  flower.style.opacity = "0.85";
-  flower.textContent = "🌸";
-  flower.style.pointerEvents="none";
-  document.getElementById('flowerArea').appendChild(flower);
-  let fall=setInterval(()=>{
-    flower.style.top = (parseInt(flower.style.top)+2)+'px';
-    if(parseInt(flower.style.top)>window.innerHeight+50) { flower.remove(); clearInterval(fall);}
-  },14+Math.random()*8);
-}
-function flowerRainStart(){
-  if(window.flowerTimer) return;
-  window.flowerTimer=setInterval(createFlower,1200);
-}
-function flowerRainStop(){
-  clearInterval(window.flowerTimer);window.flowerTimer=null;
-}
-</script>
-
-<!-- Countdown -->
-<div class="card center section">
-  <h2>Countdown to Celebration</h2>
-  <div style="font-size:2.2em" id="countdownLarge">-- : -- : -- : --</div>
-  <span class="muted">Days : Hours : Minutes : Seconds</span>
-</div>
-<script>
-const BIRTHDAY = '2025-10-30T00:00:00';
-function badgeCountdown(){
-  const now = new Date();
-  const target = new Date(BIRTHDAY);
-  const diff = target-now;
-  if(diff<=0){
-    document.getElementById('badgeCount').textContent = 'Happy Birthday!';
-    flowerRainStart();
-  }else{
-    let days = Math.floor(diff/(1000*60*60*24));
-    document.getElementById('badgeCount').textContent = `${days} days left!`;
-  }
-}
-function mainCountdown(){
-  const now = new Date();
-  const target = new Date(BIRTHDAY);
-  const diff = target-now;
-  if(diff<=0){
-    document.getElementById('countdownLarge').textContent = "Let's Celebrate!";
-    flowerRainStart();
-    confettiBurst();
-  }else{
-    let days = Math.floor(diff/(1000*60*60*24));
-    let hours = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
-    let mins = Math.floor((diff%(1000*60*60))/(1000*60));
-    let secs = Math.floor((diff%(1000*60))/1000);
-    document.getElementById('countdownLarge').textContent =
-      `${String(days).padStart(2,0)} : ${String(hours).padStart(2,0)} : ${String(mins).padStart(2,0)} : ${String(secs).padStart(2,0)}`;
-  }
-}
-setInterval(badgeCountdown,1500);badgeCountdown();
-setInterval(mainCountdown,1000);mainCountdown();
-</script>
-
-<!-- Games + Fun + Surprises -->
-<div class="section center card">
-  <h2>Birthday Cake: Blow the Candles</h2>
-  <div id="cakeArea" style="margin:0 auto; height:100px;">
-    <span id="cakeMsg" class="muted"></span>
+  <!-- Top Badge Countdown -->
+  <div class="center" style="margin-top:1.2em;">
+    <span class="badge" id="badgeCount">Loading...</span>
   </div>
+
+  <!-- Hero: Title -->
+  <div class="card center" style="margin:1.2em auto;max-width:980px;">
+    <h1 style="font-size:3.2rem;line-height:1;">Happy Birthday, Love ❤️</h1>
+    <p class="muted" style="margin-top:6px;font-size:1.05rem">Today is all about you! Enjoy games, stories, surprises, and more!</p>
+  </div>
+
+   
+  
+
+  <script>
+  function createFlower() {
+    let flower = document.createElement('div');
+    flower.style.position = 'fixed';
+    flower.style.left = Math.random()*window.innerWidth+'px';
+    flower.style.top = '-50px';
+    flower.style.fontSize = (26+Math.random()*20)+'px';
+    flower.style.opacity = "0.9";
+    flower.textContent = "🌸";
+    flower.style.pointerEvents="none";
+    document.getElementById('flowerArea').appendChild(flower);
+    let fall=setInterval(()=>{
+      flower.style.top = (parseInt(flower.style.top)+2)+'px';
+      if(parseInt(flower.style.top)>window.innerHeight+50) { flower.remove(); clearInterval(fall); }
+    },14+Math.random()*8);
+  }
+  function flowerRainStart(){
+    if(window.flowerTimer) return;
+    window.flowerTimer=setInterval(createFlower,340);
+  }
+  function flowerRainStop(){
+    clearInterval(window.flowerTimer);window.flowerTimer=null;
+  }
+  </script>
+
+  <!-- Countdown -->
+  <div class="card center section" style="max-width:980px;margin:1.2em auto 0;">
+    <h2 style="font-size:1.8rem">Countdown to Celebration</h2>
+    <div style="font-size:2.2em;margin-top:8px" id="countdownLarge">-- : -- : -- : --</div>
+    <span class="muted">Days : Hours : Minutes : Seconds</span>
+  </div>
+
+  <script>
+  const BIRTHDAY = '2025-10-30T00:00:00';
+  function badgeCountdown(){
+    const now = new Date();
+    const target = new Date(BIRTHDAY);
+    const diff = target-now;
+    if(diff<=0){
+      document.getElementById('badgeCount').textContent = 'Happy Birthday!';
+      flowerRainStart();
+    }else{
+      let days = Math.floor(diff/(1000*60*60*24));
+      document.getElementById('badgeCount').textContent = `${days} days left!`;
+    }
+  }
+  function mainCountdown(){
+    const now = new Date();
+    const target = new Date(BIRTHDAY);
+    const diff = target-now;
+    if(diff<=0){
+      document.getElementById('countdownLarge').textContent = "Let's Celebrate!";
+      flowerRainStart();
+      confettiBurst();
+    }else{
+      let days = Math.floor(diff/(1000*60*60*24));
+      let hours = Math.floor((diff%(1000*60*60*24))/(1000*60*60));
+      let mins = Math.floor((diff%(1000*60*60))/(1000*60));
+      let secs = Math.floor((diff%(1000*60))/1000);
+      document.getElementById('countdownLarge').textContent =
+        `${String(days).padStart(2,0)} : ${String(hours).padStart(2,0)} : ${String(mins).padStart(2,0)} : ${String(secs).padStart(2,0)}`;
+    }
+  }
+  setInterval(badgeCountdown,1500);badgeCountdown();
+  setInterval(mainCountdown,1000);mainCountdown();
+  </script>
+
+  <!-- Games + Fun + Surprises -->
+ <div class="section center card" style="max-width:980px;margin:1.2em auto; padding:1.5em 1em;">
+  <h2 style="font-size:1.6rem; margin-bottom:1em;">🎂 Birthday Cake: Blow the Candles</h2>
+  <div id="cakeArea" style="margin:auto; height:140px; display:flex; justify-content:center; align-items:flex-end; gap:18px; position:relative;">
+  </div>
+  <div id="cakeMsg" style="margin-top:2.2em; font-size:1.2rem; color:#ff66b2; font-weight:500;"></div>
 </div>
-<script>
+
+  <script>
 function drawCake(){
-  let out='';
-  for(let i=0;i<5;i++){
-    out+=`
-      <span style="display:inline-block;position:relative; margin:0 6px;">
-        <span class="candle" style="width:11px;height:34px;background:#ff6b81;border-radius:3px 3px 9px 9px;display:block;position:relative;cursor:pointer;" onclick="blowCandle(this)">
-          <span class="flame" style="width:9px;height:16px;background:gold;border-radius:9px;position:absolute;top:-14px;left:1px;opacity:1;transition:opacity 1s;"></span>
+  const candleColors = ['#ff6b81', '#ff8ba7', '#ff9eb8', '#ff739b', '#ff7fa6'];
+  let out = '';
+  blownCandles = 0;
+
+  for(let i = 0; i < 5; i++){
+    const color = candleColors[i % candleColors.length];
+    out += `
+      <span style="display:inline-block;position:relative;margin:0 6px;">
+        <span class="candle" 
+          style="width:14px;height:40px;background:${color};
+                 border-radius:4px 4px 10px 10px;
+                 display:block;position:relative;
+                 cursor:pointer;
+                 box-shadow:inset 0 -2px 4px rgba(0,0,0,0.2),
+                            0 3px 8px rgba(0,0,0,0.3);"
+          onclick="blowCandle(this)">
+          
+          <!-- glowing flame -->
+          <span class="flame" style="
+            width:12px;
+            height:18px;
+            background: radial-gradient(circle at 50% 30%, gold 0%, orange 60%, transparent 100%);
+            border-radius:50%;
+            position:absolute;
+            top:-20px;
+            left:1px;
+            opacity:1;
+            animation:flicker 0.25s infinite alternate;
+            filter:drop-shadow(0 0 6px gold);
+            transition:opacity 1s ease-out, transform 0.6s ease-out;">
+          </span>
+
+          <!-- tiny candle glow -->
+          <span style="
+            content:'';
+            position:absolute;
+            top:-30px;left:-10px;
+            width:34px;height:40px;
+            background:radial-gradient(circle, rgba(255,215,0,0.3) 0%, transparent 70%);
+            border-radius:50%;
+            pointer-events:none;">
+          </span>
+
         </span>
       </span>
     `;
   }
-  cakeArea.innerHTML=out;
-  cakeMsg.textContent="";
+
+  cakeArea.innerHTML = out;
+  cakeMsg.textContent = "";
 }
-var blownCandles=0;
+
+// Add flicker animation
+const style = document.createElement('style');
+style.textContent = `
+@keyframes flicker {
+  0% { transform: scale(1) rotate(0deg); opacity: 0.9; filter: drop-shadow(0 0 4px gold); }
+  50% { transform: scale(1.1) rotate(2deg); opacity: 1; filter: drop-shadow(0 0 8px gold); }
+  100% { transform: scale(0.95) rotate(-2deg); opacity: 0.85; filter: drop-shadow(0 0 3px gold); }
+}`;
+document.head.appendChild(style);
+
+var blownCandles = 0;
+
 function blowCandle(el){
   const flame = el.querySelector('.flame');
   if(!flame) return;
-  flame.style.opacity='0';
-  el.onclick='';
+
+  // fade out and shrink flame
+  flame.style.opacity = '0';
+  flame.style.transform = 'scale(0.2)';
+  el.onclick = '';
+
   blownCandles++;
-  if(blownCandles===5){
-    cakeMsg.textContent="🎉 Make your wish!";
+  if(blownCandles === 5){
+    cakeMsg.textContent = "🎉 Make your wish!";
     confettiBurst();
   }
 }
+
 drawCake();
 </script>
 
-<style>
-  #giftSection { text-align: center; margin: 2em auto; max-width: 500px; }
-  .love-poem { font-family: 'Dancing Script', cursive; font-size: 1.3em; background: linear-gradient(45deg, #ff6b81, #ffd166); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; text-shadow: 0 2px 6px rgba(255, 107, 129, 0.5); line-height: 1.6; user-select: none; margin-top: 1em; }
-  #giftBoxBtn { display: inline-block; width: 70px; height: 70px; background: linear-gradient(135deg, #ff6b81 70%, #ffd166 100%); border-radius: 16px; font-size: 38px; line-height: 70px; box-shadow: 0 3px 26px #ff6b81a2; cursor: pointer; user-select: none; }
-</style>
 
-<div class="section card" id="giftSection">
-  <h2>Surprise Gift Box</h2>
-  <div class="center">
-    <span id="giftBoxBtn" onclick="openGift()">🎁</span>
-  </div>
-  <div id="giftMsg" class="love-poem" style="display:none;">
-    <p>💖 [Tere Naam, Anju] 💖</p>
-    <p>[Har subah teri yaadon se hoti hai shuru,]<br>[Dil ke kone mein basa hai tu, meri Anju.] 🌸</p>
-    <p>[Doori ke raaste bade lamba lage,]<br>[Par tera pyaar har pal mere saath chale.] 💫</p>
-    <p>[Teri hasi meri duniya ka noor hai,]<br>[Tere bina sab kuch adhura zaroor hai.] 🌷</p>
-    <p>[Kabhi rooth jaati hai, kabhi muskura deti hai,]<br>[Meri zindagi ko har rang de jaati hai.] 🌈</p>
-    <p>[Wo pehla milna, wo pehli baat,]<br>[Aaj bhi deta hai dil ko sukoon aur raahat ka ehsaas.] 💌</p>
-    <p>[Tu keh nahi paati, par main samajh jaata hoon,]<br>[Tere har khamoshi mein apna jahaan paata hoon.] ❤️</p>
-    <p>[11 saal ka safar, yaadon ka samaan,]<br>[Har pal ke saath badha yeh rishta mahaan.] ⏳</p>
-    <p>[Tu meri dua, mera sapna, meri duniya,]<br>[Aur main sirf tera… hamesha ka Aditya.] 💍</p>
-  </div>
-</div>
-<script>
-  const giftMsg = document.getElementById('giftMsg');
-  function openGift(){
-    giftMsg.style.display = 'block';
-    confettiBurst();
-    flowerRainStart();
-    setTimeout(()=>{giftMsg.style.display = 'none';}, 200000);
-  }
-</script>
+  <style>
+    #giftSection { text-align: center; margin: 2em auto; max-width: 640px; }
+    #giftBoxBtn { display: inline-block; width: 70px; height: 70px; background: linear-gradient(135deg, var(--pink) 70%, var(--gold) 100%); border-radius: 16px; font-size: 38px; line-height: 70px; box-shadow:0 10px 30px rgba(255,107,129,0.14); cursor: pointer; user-select: none; border:none; }
+  </style>
 
-<div class="section card" style="text-align: center;">
-  <h2>Timeline: Our Best Moments</h2>
-  <ul style="list-style:none;padding:0;" id="timelineList"></ul>
-</div>
-<script>
-let timeline=[
-  {date:'21 Jun 2014',title:'First met',text:'We met online, remember our fun chats!'   },
-  {date:'21 Jun 2018',title:'First Video Call',text:'Your smile on our first call was unforgettable.' },
-  {date:'21 Jul 2024',title:'First Kiss',text:'Our first kiss, Gorakhpur. Magic in the air.' }
-];
-timelineList.innerHTML=timeline.map(item=>
-  `<li style="margin-bottom:1em;">
-     <span style="font-weight:700;font-size:1.1em;">${item.title}</span>
-     <span class="muted"> • ${item.date}</span><br/>
-     <span>${item.text}</span><br/>
-   </li>`
-).join('');
-</script>
-
-<div class="section card center" style="max-width: 960px; margin: auto;">
-  <h2>Gallery</h2>
-  <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;" id="gallery">
-    <img src="https://lh3.googleusercontent.com/d/1U1pPz1DM7kE2sLVEm5DWYllHR2qqLyug" alt="Anjali's photo" style="width:100%; object-fit:contain; border-radius:8px; cursor:pointer;" data-src="https://lh3.googleusercontent.com/d/1U1pPz1DM7kE2sLVEm5DWYllHR2qqLyug">
-    <img src="images/photo2.jpg" style="width:100%; object-fit:contain; border-radius:8px; cursor:pointer;" data-src="images/photo2.jpg">
-    <img src="images/photo3.jpg" style="width:100%; object-fit:contain; border-radius:8px; cursor:pointer;" data-src="images/photo3.jpg">
-  </div>
-</div>
-
-<div id="modal"><img id="modalImg" src=""></div>
-<script>
-const modal = document.getElementById('modal');
-const modalImg = document.getElementById('modalImg');
-document.querySelectorAll('#gallery img').forEach(img=>{
-  img.addEventListener('click', ()=>{
-    modalImg.src = img.getAttribute('data-src') || img.src;
-    modal.style.display = 'flex';
-  });
-});
-modal.addEventListener('click', ()=> modal.style.display='none');
-</script>
-
-<!-- Scratch Card: two stacked canvases to avoid text overlap -->
-<div class="section card center">
-  <h2>Digital Scratch Card</h2>
-  <div id="scratchArea">
-    <canvas id="msgCanvas" width="360" height="140"></canvas>
-    <canvas id="overlayCanvas" width="360" height="140"></canvas>
-    <div id="revealMsg">(Scratch to reveal your message)</div>
-  </div>
-</div>
-
-<script>
-(function(){
-  const msgCanvas = document.getElementById('msgCanvas');
-  const overlayCanvas = document.getElementById('overlayCanvas');
-  const revealMsgEl = document.getElementById('revealMsg');
-  const msgCtx = msgCanvas.getContext('2d');
-  const overCtx = overlayCanvas.getContext('2d');
-
-  const message = "You mean the world to me, Anjali! 💖";
-
-  // draw the message on the bottom canvas
-  function drawMessage(){
-    msgCtx.clearRect(0,0,msgCanvas.width,msgCanvas.height);
-    msgCtx.fillStyle = '#ffdede';
-    msgCtx.fillRect(0,0,msgCanvas.width,msgCanvas.height);
-    msgCtx.fillStyle = '#85095e';
-    msgCtx.font = '20px Poppins, sans-serif';
-    msgCtx.textAlign = 'center';
-    msgCtx.textBaseline = 'middle';
-    // wrap text if needed
-    const maxWidth = msgCanvas.width - 20;
-    const words = message.split(' ');
-    let line = '', y = msgCanvas.height/2 - 8;
-    const lines = [];
-    for (let n = 0; n < words.length; n++) {
-      const testLine = line + words[n] + ' ';
-      const metrics = msgCtx.measureText(testLine);
-      if (metrics.width > maxWidth && n > 0) {
-        lines.push(line.trim());
-        line = words[n] + ' ';
-      } else {
-        line = testLine;
-      }
-    }
-    lines.push(line.trim());
-    // adjust vertical start to center multiline
-    const lineHeight = 24;
-    const totalHeight = lines.length * lineHeight;
-    let startY = (msgCanvas.height - totalHeight)/2 + lineHeight/2;
-    for(let i=0;i<lines.length;i++){
-      msgCtx.fillText(lines[i], msgCanvas.width/2, startY + i*lineHeight);
-    }
-  }
-
-  // draw the overlay on the top canvas (no overlapping text on the bottom)
-  function drawOverlay(){
-    overCtx.clearRect(0,0,overlayCanvas.width, overlayCanvas.height);
-    overCtx.fillStyle = '#dad1d7';
-    overCtx.fillRect(0,0,overlayCanvas.width, overlayCanvas.height);
-    overCtx.fillStyle = '#666';
-    overCtx.font = '700 20px Poppins, sans-serif';
-    overCtx.textAlign = 'center';
-    overCtx.textBaseline = 'middle';
-    overCtx.fillText('Scratch here!', overlayCanvas.width/2, overlayCanvas.height/2);
-  }
-
-  drawMessage();
-  drawOverlay();
-
-  let drawing = false;
-
-  function getPointerPos(e, canvas) {
-    const rect = canvas.getBoundingClientRect();
-    const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0].clientX);
-    const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0].clientY);
-    return { x: clientX - rect.left, y: clientY - rect.top };
-  }
-
-  function pointerDown(e){
-    drawing = true;
-    draw(e);
-  }
-  function draw(e){
-    if(!drawing) return;
-    const pos = getPointerPos(e, overlayCanvas);
-    overCtx.globalCompositeOperation = 'destination-out';
-    overCtx.beginPath();
-    overCtx.arc(pos.x, pos.y, 22, 0, Math.PI*2);
-    overCtx.fill();
-    overCtx.closePath();
-    overCtx.globalCompositeOperation = 'source-over';
-  }
-  function pointerUp(){
-    if(!drawing) return;
-    drawing = false;
-    // compute percent cleared on overlay canvas
-    const img = overCtx.getImageData(0,0,overlayCanvas.width,overlayCanvas.height);
-    let transparent = 0;
-    for(let i=3;i<img.data.length;i+=4){
-      if(img.data[i] === 0) transparent++;
-    }
-    const totalPixels = overlayCanvas.width * overlayCanvas.height;
-    const cleared = (transparent / totalPixels) * 100;
-    if(cleared > 30){
-      // reveal by removing overlay entirely
-      overlayCanvas.style.display = 'none';
-      revealMsgEl.textContent = message;
-      confettiBurst();
-      flowerRainStart();
-      setTimeout(()=>{ revealMsgEl.textContent = ""; overlayCanvas.style.display = 'block'; drawOverlay(); }, 7000);
-    }
-  }
-
-  overlayCanvas.addEventListener('pointerdown', pointerDown);
-  overlayCanvas.addEventListener('pointermove', draw);
-  overlayCanvas.addEventListener('pointerup', pointerUp);
-  overlayCanvas.addEventListener('pointerleave', pointerUp);
-
-  // Touch fallback
-  overlayCanvas.addEventListener('touchstart', function(e){ e.preventDefault(); pointerDown(e.touches[0]); }, {passive:false});
-  overlayCanvas.addEventListener('touchmove', function(e){ e.preventDefault(); draw(e.touches[0]); }, {passive:false});
-  overlayCanvas.addEventListener('touchend', function(e){ e.preventDefault(); pointerUp(); }, {passive:false});
-})();
-</script>
-
-<div class="section card center">
-  <h2>Click the Hearts for Wishes!</h2>
-  <div id="heartsWrap" style="margin-top:10px;display:flex;gap:0.7em;justify-content:center;"></div>
-</div>
-<script>
-let heartsMsg=[
-  'I love your smile more than anything.',
-  'You are my Babu ❤️',
-  'Thank you for everything.',
-  'Can’t wait for our next adventure.',
-  'You light up my world.',
-  "Here's to the best year yet!",
-  "Wishing you endless happiness."
-];
-function makeHearts(){
-  const wrap = document.getElementById('heartsWrap');
-  wrap.innerHTML='';
-  for(let i=0;i<10;i++){
-    let btn=document.createElement('button');
-    btn.className='btn';
-    btn.textContent='❤';
-    btn.onclick=()=>{ alert(heartsMsg[Math.floor(Math.random()*heartsMsg.length)]); confettiBurst(); };
-    wrap.appendChild(btn);
-  }
-}
-makeHearts();
-</script>
-
-<!-- Wish Wall -->
-<div class="section card center" id="wishWallWrap">
-  <h2>Wish Wall: Messages from Friends & Family</h2>
-  <div id="wishWall"></div>
-  <div style="margin-top:0.5em;">
-    <input id="wishInput" type="text" placeholder="Type your wish for Anjali..." style="padding:8px;border-radius:6px;border:none;">
-    <button class="btn" id="wishBtn">Send Wish</button>
-  </div>
-</div>
-<script>
-function renderWishWall(){
-  const wishWall = document.getElementById('wishWall');
-  wishWall.innerHTML='';
-  let wishes=JSON.parse(localStorage.getItem('anjaliWishes')||'[]');
-  wishes.forEach(msg=>{
-    let div=document.createElement('div');
-    div.className='card muted';
-    div.style.margin = '6px 0';
-    div.textContent=msg;
-    wishWall.appendChild(div);
-  });
-}
-document.getElementById('wishBtn').onclick = function(){
-  const wishInput = document.getElementById('wishInput');
-  const txt = wishInput.value.trim();
-  if(!txt) return;
-  let wishes = JSON.parse(localStorage.getItem('anjaliWishes')||'[]');
-  wishes.push(txt);
-  localStorage.setItem('anjaliWishes', JSON.stringify(wishes.slice(-40)));
-  wishInput.value='';
-  renderWishWall();
-};
-renderWishWall();
-</script>
-
-<!-- Birthday Letter -->
-<div class="section card">
-  <h2>Your Birthday Letter</h2>
-  <div id="letterText" style="white-space:pre-line;color:#fff;background:rgba(255,255,255,0.02);padding:1em;border-radius:10px;"></div>
-  <button class="btn" id="revealLetterBtn">Reveal Letter</button>
-</div>
-<script>
-const fullLetter=`My dearest Anjali,\n\nMay every wish come true.\nFrom fun chats, first calls, to today—your presence is my joy.\n\nHappy birthday, Babu. Always yours,\nAdi.`;
-document.getElementById('revealLetterBtn').addEventListener('click', ()=>{
-  const letterText = document.getElementById('letterText');
-  letterText.textContent='';
-  let i=0;
-  const speed=33;
-  const id = setInterval(()=>{
-    letterText.textContent+=fullLetter[i]||'';
-    i++;if(i>=fullLetter.length){clearInterval(id);}
-  },speed);
-});
-</script>
-
-<div class="section card center">
-  <h2>Fun Extras</h2>
-  <button class="btn" onclick="showJoke()">Birthday Joke</button>
-  <button class="btn" onclick="partyMode()">Party Mode!</button>
-  <button class="btn" id="spinWheelBtn">Spin the Surprise Wheel</button>
-  <button class="btn" onclick="showQuiz()">Birthday Quiz</button>
-  <button class="btn" onclick="showEmojiPicker()">Pick Today’s Mood</button>
-</div>
-
-<!-- Wheel modal -->
-<div id="wheelModal">
-  <div id="wheelWrap">
-    <canvas id="wheelCanvas" width="360" height="360"></canvas>
-    <div style="margin-top:10px;">
-      <button class="btn" id="doSpin">Spin</button>
-      <button class="btn" id="closeWheel">Close</button>
+  <div class="section card" id="giftSection" style="max-width:980px;margin:1.2em auto;">
+    <h2 style="font-size:1.6rem">Surprise Gift Box</h2>
+    <div class="center">
+      <button id="giftBoxBtn" onclick="openGift()">🎁</button>
+    </div>
+    <div id="giftMsg" class="love-poem" style="display:none;margin-top:1em;">
+      <p>💖 [Tere Naam, Anju] 💖</p>
+      <p>[Har subah teri yaadon se hoti hai shuru,]<br>[Dil ke kone mein basa hai tu, meri Anju.] 🌸</p>
+      <p>[Doori ke raaste bade lamba lage,]<br>[Par tera pyaar har pal mere saath chale.] 💫</p>
+      <p>[Teri hasi meri duniya ka noor hai,]<br>[Tere bina sab kuch adhura zaroor hai.] 🌷</p>
+      <p>[Kabhi rooth jaati hai, kabhi muskura deti hai,]<br>[Meri zindagi ko har rang de jaati hai.] 🌈</p>
+      <p>[Wo pehla milna, wo pehli baat,]<br>[Aaj bhi deta hai dil ko sukoon aur raahat ka ehsaas.] 💌</p>
+      <p>[Tu keh nahi paati, par main samajh jaata hoon,]<br>[Tere har khamoshi mein apna jahaan paata hoon.] ❤️</p>
+      <p>[11 saal ka safar, yaadon ka samaan,]<br>[Har pal ke saath badha yeh rishta mahaan.] ⏳</p>
+      <p>[Tu meri dua, mera sapna, meri duniya,]<br>[Aur main sirf tera… hamesha ka Aditya.] 💍</p>
     </div>
   </div>
-</div>
 
-<script>
-function showJoke(){alert("Why do birthday candles love parties? They get to go out in style!");}
-function partyMode(){
-  document.body.style.background='linear-gradient(90deg,#ffd166 60%, #ff6b81 100%)';
-  confettiBurst();flowerRainStart();
-  setTimeout(()=>{document.body.style.background='linear-gradient(180deg,var(--bg1),var(--bg2))'; flowerRainStop();},10000);
-}
-function showQuiz(){
-  let q=prompt("Quiz: What year did you meet Adi?");
-  if(q==='2014'){alert("Correct!");confettiBurst();}else{alert("Try again!");}
-}
-function showEmojiPicker(){
-  let options=["😊","😁","🥳","😍","🤘","🤗"];
-  alert("Mood set to "+options[Math.floor(Math.random()*options.length)]);
-}
-
-// Spin wheel implementation (visual + corrected result calculation)
-(function(){
-  const options = ["Virtual Hug","Gift Card","Poem","Special Compliment","Extra Confetti","Surprise Call","Movie Night"];
-  const canvas = document.getElementById('wheelCanvas');
-  const ctx = canvas.getContext('2d');
-  const center = canvas.width/2;
-  const radius = center - 6;
-  let isSpinning = false;
-  let rotation = 0; // radians
-
-  function drawWheel(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    const segment = (2*Math.PI)/options.length;
-    for(let i=0;i<options.length;i++){
-      const start = rotation + i*segment;
-      const end = start + segment;
-      ctx.beginPath();
-      ctx.moveTo(center, center);
-      ctx.arc(center, center, radius, start, end);
-      ctx.closePath();
-      ctx.fillStyle = (i%2===0) ? '#ffdede' : '#ffd9b3';
-      ctx.fill();
-      // text
-      ctx.save();
-      ctx.translate(center, center);
-      ctx.rotate(start + segment/2);
-      ctx.textAlign = 'right';
-      ctx.fillStyle = '#6b2b3a';
-      ctx.font = 'bold 14px Poppins, sans-serif';
-      ctx.fillText(options[i], radius - 8, 6);
-      ctx.restore();
+  <script>
+    const giftMsg = document.getElementById('giftMsg');
+    function openGift(){
+      giftMsg.style.display = 'block';
+      confettiBurst();
+      flowerRainStart();
+      setTimeout(()=>{giftMsg.style.display = 'none';}, 200000);
     }
-    // draw pointer at top
-    ctx.fillStyle = '#fff';
-    ctx.beginPath();
-    ctx.moveTo(center, 6);
-    ctx.lineTo(center-12, 26);
-    ctx.lineTo(center+12, 26);
-    ctx.closePath();
-    ctx.fill();
-  }
+  </script>
 
-  function animateTo(targetRotation, duration=4200){
-    if(isSpinning) return;
-    isSpinning = true;
-    const start = performance.now();
-    const initial = rotation;
-    function frame(t){
-      const elapsed = t - start;
-      const progress = Math.min(elapsed / duration, 1);
-      // ease out cubic
-      const eased = 1 - Math.pow(1 - progress, 3);
-      rotation = initial + (targetRotation - initial) * eased;
-      drawWheel();
-      if(progress < 1){
-        requestAnimationFrame(frame);
-      } else {
-        isSpinning = false;
-        // compute landed index accurately:
-        const segment = (2*Math.PI)/options.length;
-        // pointer angle (top) in canvas coordinates is -Math.PI/2, convert to 0..2pi:
-        const pointerAngle = (3*Math.PI)/2; // same as -PI/2 but positive
-        // normalize rotation to 0..2PI
-        const normalized = (rotation % (2*Math.PI) + 2*Math.PI) % (2*Math.PI);
-        // i such that rotation + i*segment + segment/2 === pointerAngle (mod 2pi)
-        const raw = (pointerAngle - normalized - segment/2);
-        const index = ((Math.floor(((raw % (2*Math.PI)) + (2*Math.PI)) % (2*Math.PI) / segment)) + options.length) % options.length;
-        const result = options[index];
-        confettiBurst();
-        flowerRainStart();
-        setTimeout(()=> alert("Your surprise: " + result), 200);
-        document.getElementById('doSpin').disabled = false;
-      }
-    }
-    requestAnimationFrame(frame);
-  }
+  <div class="section card" style="text-align: center;max-width:980px;margin:1.2em auto;">
+    <h2 style="font-size:1.6rem">Timeline: Our Best Moments</h2>
+    <ul style="list-style:none;padding:0;margin-top:12px;" id="timelineList"></ul>
+  </div>
+  <script>
+  let timeline=[
+    {date:'21 Jun 2014',title:'First met',text:'We met online, remember our fun chats!'},
+    {date:'21 Jun 2018',title:'First Video Call',text:'Your smile on our first call was unforgettable.'},
+    {date:'21 Jul 2024',title:'First Kiss',text:'Our first kiss, Gorakhpur. Magic in the air.'}
+  ];
+  document.getElementById('timelineList').innerHTML=timeline.map(item=>
+    `<li style="margin-bottom:1em;">
+       <span style="font-weight:700;font-size:1.05em;">${item.title}</span>
+       <span class="muted"> • ${item.date}</span><br/>
+       <span>${item.text}</span><br/>
+     </li>`
+  ).join('');
+  </script>
 
-  document.getElementById('spinWheelBtn').addEventListener('click', ()=> {
-    document.getElementById('wheelModal').style.display = 'flex';
-    drawWheel();
-  });
-  document.getElementById('closeWheel').addEventListener('click', ()=> {
-    document.getElementById('wheelModal').style.display = 'none';
-  });
-  document.getElementById('doSpin').addEventListener('click', ()=>{
-    if(isSpinning) return;
-    const rounds = 6 + Math.floor(Math.random()*3);
-    const targetIndex = Math.floor(Math.random()*options.length);
-    const segment = (2*Math.PI)/options.length;
-    // compute target rotation so that the chosen segment's center ends up at the top pointer
-    const targetRotation = rounds * 2*Math.PI + ( (3*Math.PI)/2 - (targetIndex * segment + segment/2) );
-    document.getElementById('doSpin').disabled = true;
-    animateTo(targetRotation, 4500);
-  });
+  <div class="section card center" style="max-width:980px;margin:1.2em auto;">
+    <h2 style="font-size:1.6rem">Gallery</h2>
+    <div class="gallery-grid" id="gallery" style="margin-top:12px;">
+      <img src="https://lh3.googleusercontent.com/d/1U1pPz1DM7kE2sLVEm5DWYllHR2qqLyug" alt="Anjali's photo" data-src="https://lh3.googleusercontent.com/d/1U1pPz1DM7kE2sLVEm5DWYllHR2qqLyug">
+      <img src="images/photo2.jpg" alt="photo2" data-src="images/photo2.jpg">
+      <img src="images/photo3.jpg" alt="photo3" data-src="images/photo3.jpg">
+    </div>
+  </div>
 
-  // initial draw
-  drawWheel();
-})();
-</script>
-
-<!-- Share & RSVP -->
-<div class="section card center">
-  <h2>With Love and Care from Your Love</h2>
-  <button class="btn" onclick="alert('You are present and loved!')">I’m Here 🎉</button>
-  <a class="btn" href="https://wa.me/?text=Happy%20Birthday%20Anjali%21" target="_blank">Share on WhatsApp</a>
-</div>
-
-<!-- Confetti Animation JS (Open Source) -->
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-<script>
-function confettiBurst(){
-  const canvasEl = document.getElementById('confettiArea');
-  if(!canvasEl) return;
-  confetti.create(canvasEl, {resize:true, useWorker:true})({particleCount:60,spread:120,origin:{y:0.42}});
-}
-</script>
-
-<!-- Music Controls: user-gesture-first playback (create fresh Audio in click handler) -->
-<script>
-(function(){
-  const playBtn = document.getElementById('playBtn');
-  const toggleBtn = document.getElementById('toggleBtn');
-  const audio = document.getElementById('bg-music');
-
-  // Set up audio element
-  audio.volume = 0.9;
-  audio.loop = true;
-
-  function updateUI(isPlaying) {
-    if (isPlaying) {
-      playBtn.classList.add('btn-playing');
-      playBtn.textContent = 'Playing';
-      toggleBtn.textContent = 'Pause';
-    } else {
-      playBtn.classList.remove('btn-playing');
-      playBtn.textContent = 'Play Music';
-      toggleBtn.textContent = 'Play';
-    }
-  }
-
-  playBtn.addEventListener('click', () => {
-    audio.play().then(() => updateUI(true)).catch((err) => {
-      updateUI(false);
-      showAudioHint('Unable to play audio. Please interact with the page or check browser permissions.');
-      console.error('Audio play failed:', err);
+  <div id="modal"><img id="modalImg" src=""></div>
+  <script>
+  const modal = document.getElementById('modal');
+  const modalImg = document.getElementById('modalImg');
+  document.querySelectorAll('.gallery-grid img').forEach(img=>{
+    img.addEventListener('click', ()=>{
+      modalImg.src = img.getAttribute('data-src') || img.src;
+      modal.style.display = 'flex';
     });
   });
+  modal.addEventListener('click', ()=> modal.style.display='none');
+  </script>
 
-  toggleBtn.addEventListener('click', () => {
-    if (audio.paused) {
-      audio.play().then(() => updateUI(true)).catch((err) => {
-        updateUI(false);
-        showAudioHint('Unable to play audio. Please interact with the page or check browser permissions.');
-        console.error('Audio play failed:', err);
-      });
-    } else {
-      audio.pause();
-      updateUI(false);
+  <!-- Scratch Card -->
+  <div class="section card center" style="max-width:980px;margin:1.2em auto;">
+    <h2 style="font-size:1.6rem">Digital Scratch Card</h2>
+    <div id="scratchArea">
+      <canvas id="msgCanvas" width="320" height="120"></canvas>
+      <canvas id="overlayCanvas" width="320" height="120"></canvas>
+      <div id="revealMsg">(Scratch to reveal your message)</div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    const msgCanvas = document.getElementById('msgCanvas');
+    const overlayCanvas = document.getElementById('overlayCanvas');
+    const revealMsgEl = document.getElementById('revealMsg');
+    const msgCtx = msgCanvas.getContext('2d');
+    const overCtx = overlayCanvas.getContext('2d');
+    const message = "You mean the world to me, Anjali! 💖";
+
+    function drawMessage(){
+      msgCtx.clearRect(0,0,msgCanvas.width,msgCanvas.height);
+      msgCtx.fillStyle = '#ffdede';
+      msgCtx.fillRect(0,0,msgCanvas.width,msgCanvas.height);
+      msgCtx.fillStyle = '#6d1130';
+      msgCtx.font = '18px Montserrat, sans-serif';
+      msgCtx.textAlign = 'center';
+      msgCtx.textBaseline = 'middle';
+      const maxWidth = msgCanvas.width - 20;
+      const words = message.split(' ');
+      let line = '', lines = [];
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        const metrics = msgCtx.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+          lines.push(line.trim());
+          line = words[n] + ' ';
+        } else {
+          line = testLine;
+        }
+      }
+      lines.push(line.trim());
+      const lineHeight = 22;
+      const totalHeight = lines.length * lineHeight;
+      let startY = (msgCanvas.height - totalHeight)/2 + lineHeight/2;
+      msgCtx.fillStyle = '#6b2940';
+      for(let i=0;i<lines.length;i++){
+        msgCtx.fillText(lines[i], msgCanvas.width/2, startY + i*lineHeight);
+      }
     }
-  });
 
-  audio.addEventListener('play', () => updateUI(true));
-  audio.addEventListener('pause', () => updateUI(false));
-
-  function showAudioHint(text) {
-    let hint = document.getElementById('audio-hint-inline');
-    if (!hint) {
-      hint = document.createElement('div');
-      hint.id = 'audio-hint-inline';
-      hint.style.position = 'fixed';
-      hint.style.bottom = '18px';
-      hint.style.left = '18px';
-      hint.style.padding = '10px 14px';
-      hint.style.background = 'rgba(0,0,0,0.7)';
-      hint.style.color = '#fff';
-      hint.style.borderRadius = '10px';
-      hint.style.zIndex = 10020;
-      hint.style.fontSize = '14px';
-      hint.style.maxWidth = '80vw';
-      document.body.appendChild(hint);
+    function drawOverlay(){
+      overCtx.clearRect(0,0,overlayCanvas.width, overlayCanvas.height);
+      overCtx.fillStyle = '#dad1d7';
+      overCtx.fillRect(0,0,overlayCanvas.width, overlayCanvas.height);
+      overCtx.fillStyle = '#666';
+      overCtx.font = '700 18px Montserrat, sans-serif';
+      overCtx.textAlign = 'center';
+      overCtx.textBaseline = 'middle';
+      overCtx.fillText('Scratch here!', overlayCanvas.width/2, overlayCanvas.height/2);
     }
-    hint.textContent = text;
-    clearTimeout(hint._t);
-    hint._t = setTimeout(()=>{ hint.remove(); }, 6000);
+
+    drawMessage();
+    drawOverlay();
+
+    let drawing = false;
+    function getPointerPos(e, canvas) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0].clientX);
+      const clientY = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0].clientY);
+      return { x: clientX - rect.left, y: clientY - rect.top };
+    }
+    function pointerDown(e){ drawing = true; draw(e); }
+    function draw(e){
+      if(!drawing) return;
+      const pos = getPointerPos(e, overlayCanvas);
+      overCtx.globalCompositeOperation = 'destination-out';
+      overCtx.beginPath();
+      overCtx.arc(pos.x, pos.y, 18, 0, Math.PI*2);
+      overCtx.fill();
+      overCtx.closePath();
+      overCtx.globalCompositeOperation = 'source-over';
+    }
+    function pointerUp(){
+      if(!drawing) return;
+      drawing = false;
+      const img = overCtx.getImageData(0,0,overlayCanvas.width,overlayCanvas.height);
+      let transparent = 0;
+      for(let i=3;i<img.data.length;i+=4){ if(img.data[i] === 0) transparent++; }
+      const totalPixels = overlayCanvas.width * overlayCanvas.height;
+      const cleared = (transparent / totalPixels) * 100;
+      if(cleared > 30){
+        overlayCanvas.style.display = 'none';
+        revealMsgEl.textContent = message;
+        confettiBurst();
+        flowerRainStart();
+        setTimeout(()=>{ revealMsgEl.textContent = ""; overlayCanvas.style.display = 'block'; drawOverlay(); }, 7000);
+      }
+    }
+
+    overlayCanvas.addEventListener('pointerdown', pointerDown);
+    overlayCanvas.addEventListener('pointermove', draw);
+    overlayCanvas.addEventListener('pointerup', pointerUp);
+    overlayCanvas.addEventListener('pointerleave', pointerUp);
+    overlayCanvas.addEventListener('touchstart', function(e){ e.preventDefault(); pointerDown(e.touches[0]); }, {passive:false});
+    overlayCanvas.addEventListener('touchmove', function(e){ e.preventDefault(); draw(e.touches[0]); }, {passive:false});
+    overlayCanvas.addEventListener('touchend', function(e){ e.preventDefault(); pointerUp(); }, {passive:false});
+  })();
+  </script>
+
+  <div class="section card center" style="max-width:980px;margin:1.2em auto;">
+    <h2 style="font-size:1.6rem">Click the Hearts for Wishes!</h2>
+    <div id="heartsWrap" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:0.7em;justify-content:center;"></div>
+  </div>
+
+  <script>
+  let heartsMsg=[
+    'I love your smile more than anything.',
+    'You are my Babu ❤️',
+    'Thank you for everything.',
+    'Can’t wait for our next adventure.',
+    'You light up my world.',
+    "Here's to the best year yet!",
+    "Wishing you endless happiness."
+  ];
+  function makeHearts(){
+    const wrap = document.getElementById('heartsWrap');
+    wrap.innerHTML='';
+    for(let i=0;i<10;i++){
+      let btn=document.createElement('button');
+      btn.className='btn';
+      btn.textContent='❤';
+      btn.onclick=()=>{ alert(heartsMsg[Math.floor(Math.random()*heartsMsg.length)]); confettiBurst(); };
+      wrap.appendChild(btn);
+    }
   }
+  makeHearts();
+  </script>
 
-  // Keyboard shortcut: P to toggle play/pause
-  document.addEventListener('keydown', (e)=>{ if(e.key==='p'||e.key==='P') toggleBtn.click(); });
-})();
-</script>
+  <!-- Wish Wall -->
+  <div class="section card center" id="wishWallWrap" style="max-width:980px;margin:1.2em auto;">
+    <h2 style="font-size:1.6rem">Wish Wall: Messages from Friends & Family</h2>
+    <div id="wishWall" style="max-height:180px;overflow:auto;background:rgba(255,255,255,0.02);padding:0.8em;border-radius:10px;margin-top:12px;"></div>
+    <div style="margin-top:10px;">
+      <input id="wishInput" type="text" placeholder="Type your wish for Anjali..." style="padding:10px;border-radius:8px;border:none;width:60%;max-width:360px;">
+      <button class="btn" id="wishBtn">Send Wish</button>
+    </div>
+  </div>
+
+  <script>
+  function renderWishWall(){
+    const wishWall = document.getElementById('wishWall');
+    wishWall.innerHTML='';
+    let wishes=JSON.parse(localStorage.getItem('anjaliWishes')||'[]');
+    wishes.forEach(msg=>{
+      let div=document.createElement('div');
+      div.className='card muted';
+      div.style.margin = '6px 0';
+      div.textContent=msg;
+      wishWall.appendChild(div);
+    });
+  }
+  document.getElementById('wishBtn').onclick = function(){
+    const wishInput = document.getElementById('wishInput');
+    const txt = wishInput.value.trim();
+    if(!txt) return;
+    let wishes = JSON.parse(localStorage.getItem('anjaliWishes')||'[]');
+    wishes.push(txt);
+    localStorage.setItem('anjaliWishes', JSON.stringify(wishes.slice(-40)));
+    wishInput.value='';
+    renderWishWall();
+  };
+  renderWishWall();
+  </script>
+
+  <!-- Birthday Letter -->
+  <div class="section card" style="max-width:980px;margin:1.2em auto;">
+    <h2 style="font-size:1.6rem">Your Birthday Letter</h2>
+    <div id="letterText" style="white-space:pre-line;color:#fff;background:rgba(255,255,255,0.02);padding:1em;border-radius:10px;"></div>
+    <button class="btn" id="revealLetterBtn" style="margin-top:10px">Reveal Letter</button>
+  </div>
+
+  <script>
+  const fullLetter=`My dearest Anjali,\n\nMay every wish come true.\nFrom fun chats, first calls, to today—your presence is my joy.\n\nHappy birthday, Babu. Always yours,\nAdi.`;
+  document.getElementById('revealLetterBtn').addEventListener('click', ()=>{
+    const letterText = document.getElementById('letterText');
+    letterText.textContent='';
+    let i=0;
+    const speed=33;
+    const id = setInterval(()=>{
+      letterText.textContent+=fullLetter[i]||'';
+      i++;if(i>=fullLetter.length){clearInterval(id);}
+    },speed);
+  });
+  </script>
+
+  <div class="section card center" style="max-width:980px;margin:1.2em auto;">
+    <h2 style="font-size:1.6rem">Fun Extras</h2>
+    <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">
+      <button class="btn" onclick="showJoke()">Birthday Joke</button>
+      <button class="btn" onclick="partyMode()">Party Mode!</button>
+      <button class="btn" id="spinWheelBtn">Spin the Surprise Wheel</button>
+      <button class="btn" onclick="showQuiz()">Birthday Quiz</button>
+      <button class="btn" onclick="showEmojiPicker()">Pick Today’s Mood</button>
+    </div>
+  </div>
+
+  <!-- Wheel modal -->
+  <div id="wheelModal"><div id="wheelWrap"><canvas id="wheelCanvas" width="360" height="360"></canvas><div style="margin-top:10px;"><button class="btn" id="doSpin">Spin</button> <button class="btn" id="closeWheel">Close</button></div></div></div>
+
+  <script>
+  function showJoke(){alert("Why do birthday candles love parties? They get to go out in style!");}
+  function partyMode(){
+    document.body.style.background='linear-gradient(90deg,#ffd166 60%, #ff6b81 100%)';
+    confettiBurst();flowerRainStart();
+    setTimeout(()=>{document.body.style.background='linear-gradient(180deg,var(--bg1),var(--bg2))'; flowerRainStop();},10000);
+  }
+  function showQuiz(){
+    let q=prompt("Quiz: What year did you meet Adi?");
+    if(q==='2014'){alert("Correct!");confettiBurst();}else{alert("Try again!");}
+  }
+  function showEmojiPicker(){
+    let options=["😊","😁","🥳","😍","🤘","🤗"];
+    alert("Mood set to "+options[Math.floor(Math.random()*options.length)]);
+  }
+  (function(){
+    const options = ["Virtual Hug","Gift Card","Poem","Special Compliment","Extra Confetti","Surprise Call","Movie Night"];
+    const canvas = document.getElementById('wheelCanvas');
+    const ctx = canvas.getContext('2d');
+    const center = canvas.width/2;
+    const radius = center - 6;
+    let isSpinning = false;
+    let rotation = 0;
+    function drawWheel(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      const segment = (2*Math.PI)/options.length;
+      for(let i=0;i<options.length;i++){
+        const start = rotation + i*segment;
+        const end = start + segment;
+        ctx.beginPath();
+        ctx.moveTo(center, center);
+        ctx.arc(center, center, radius, start, end);
+        ctx.closePath();
+        ctx.fillStyle = (i%2===0) ? '#ffdede' : '#ffd9b3';
+        ctx.fill();
+        ctx.save();
+        ctx.translate(center, center);
+        ctx.rotate(start + segment/2);
+        ctx.textAlign = 'right';
+        ctx.fillStyle = '#6b2b3a';
+        ctx.font = 'bold 14px Montserrat, sans-serif';
+        ctx.fillText(options[i], radius - 8, 6);
+        ctx.restore();
+      }
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.moveTo(center, 6);
+      ctx.lineTo(center-12, 26);
+      ctx.lineTo(center+12, 26);
+      ctx.closePath();
+      ctx.fill();
+    }
+    function animateTo(targetRotation, duration=4200){
+      if(isSpinning) return;
+      isSpinning = true;
+      const start = performance.now();
+      const initial = rotation;
+      function frame(t){
+        const elapsed = t - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        rotation = initial + (targetRotation - initial) * eased;
+        drawWheel();
+        if(progress < 1){
+          requestAnimationFrame(frame);
+        } else {
+          isSpinning = false;
+          const segment = (2*Math.PI)/options.length;
+          const pointerAngle = (3*Math.PI)/2;
+          const normalized = (rotation % (2*Math.PI) + 2*Math.PI) % (2*Math.PI);
+          const raw = (pointerAngle - normalized - segment/2);
+          const index = ((Math.floor(((raw % (2*Math.PI)) + (2*Math.PI)) % (2*Math.PI) / segment)) + options.length) % options.length;
+          const result = options[index];
+          confettiBurst();
+          flowerRainStart();
+          setTimeout(()=> alert("Your surprise: " + result), 200);
+          document.getElementById('doSpin').disabled = false;
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+    document.getElementById('spinWheelBtn').addEventListener('click', ()=> {
+      document.getElementById('wheelModal').style.display = 'flex';
+      drawWheel();
+    });
+    document.getElementById('closeWheel').addEventListener('click', ()=> {
+      document.getElementById('wheelModal').style.display = 'none';
+    });
+    document.getElementById('doSpin').addEventListener('click', ()=>{
+      if(isSpinning) return;
+      const rounds = 6 + Math.floor(Math.random()*3);
+      const targetIndex = Math.floor(Math.random()*options.length);
+      const segment = (2*Math.PI)/options.length;
+      const targetRotation = rounds * 2*Math.PI + ( (3*Math.PI)/2 - (targetIndex * segment + segment/2) );
+      document.getElementById('doSpin').disabled = true;
+      animateTo(targetRotation, 4500);
+    });
+    drawWheel();
+  })();
+  </script>
+
+  <div class="section card center" style="max-width:980px;margin:1.2em auto;">
+    <h2 style="font-size:1.6rem">With Love and Care from Your Love</h2>
+    <div style="margin-top:10px;">
+      <button class="btn" onclick="alert('You are present and loved!')">I’m Here 🎉</button>
+      <a class="btn" href="https://wa.me/?text=Happy%20Birthday%20Anjali%21" target="_blank" style="margin-left:8px;">Share on WhatsApp</a>
+    </div>
+  </div>
+
+  <!-- Confetti Animation JS -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <script>
+  function confettiBurst(){
+    const canvasEl = document.getElementById('confettiArea');
+    if(!canvasEl) return;
+    confetti.create(canvasEl, {resize:true, useWorker:true})({particleCount:60,spread:120,origin:{y:0.42}});
+  }
+  </script>
+
 </body>
 </html>
