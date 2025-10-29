@@ -7,6 +7,57 @@
 
   <!-- Fonts: Great Vibes (display), Montserrat (body) -->
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@500;700&display=swap" rel="stylesheet">
+
+
+<style>
+#giftMsg {
+  display: none;
+  color: #fff !important;
+  font-size: 4.6rem !important;
+  font-weight: 700 !important;
+  font-family: 'Poppins', 'Segoe UI', sans-serif !important;
+  text-align: center;
+  line-height: 2.3rem;
+  text-shadow: 0 0 8px rgba(255, 192, 203, 0.9), 0 0 15px rgba(255,255,255,0.8);
+  background: rgba(0, 0, 0, 0.85);
+  padding: 2rem;
+  border-radius: 20px;
+  margin-top: 2rem;
+  border: 2px solid rgba(255, 182, 193, 0.5);
+}
+
+/* --- Heading (Tere Naam, Anju) --- */
+#giftMsg p1 {
+  font-size: 2.3rem !important;
+  font-weight: 900 !important;
+  display: block;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, #ff80bf, #ff99cc, #ffd1dc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 12px rgba(255, 182, 193, 0.8), 0 0 25px rgba(255, 255, 255, 0.7);
+}
+
+/* --- Poem lines --- */
+#giftMsg p {
+ font-size: 2.3rem !important;
+  font-weight: 900 !important;
+  display: block;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, #ff80bf, #ff99cc, #ffd1dc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 12px rgba(255, 182, 193, 0.8), 0 0 25px rgba(255, 255, 255, 0.7);
+}
+
+
+</style>
+
+
+
+
+
 
   <style>
     /* --- COLORS & FONTS --- */
@@ -250,6 +301,13 @@ function blowCandle(el){
 drawCake();
 </script>
 
+<script>
+  function showPoem() {
+    document.getElementById("giftMsg").style.display = "block";
+    confettiBurst();
+  }
+</script>
+
 
   <style>
     #giftSection { text-align: center; margin: 2em auto; max-width: 640px; }
@@ -257,12 +315,14 @@ drawCake();
   </style>
 
   <div class="section card" id="giftSection" style="max-width:980px;margin:1.2em auto;">
-    <h2 style="font-size:1.6rem">Surprise Gift Box</h2>
+    <h2 style="font-size:3.2rem">Surprise Gift Box</h2>
     <div class="center">
       <button id="giftBoxBtn" onclick="openGift()">🎁</button>
+       
+
     </div>
     <div id="giftMsg" class="love-poem" style="display:none;margin-top:1em;">
-      <p>💖 [Tere Naam, Anju] 💖</p>
+      <p1>💖 [Tere Naam, Anju] 💖</p1 bold>
       <p>[Har subah teri yaadon se hoti hai shuru,]<br>[Dil ke kone mein basa hai tu, meri Anju.] 🌸</p>
       <p>[Doori ke raaste bade lamba lage,]<br>[Par tera pyaar har pal mere saath chale.] 💫</p>
       <p>[Teri hasi meri duniya ka noor hai,]<br>[Tere bina sab kuch adhura zaroor hai.] 🌷</p>
