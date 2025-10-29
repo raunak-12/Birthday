@@ -57,6 +57,45 @@
 
 
 
+<style>
+  #customAlert {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  #alertBox {
+    background: #1c1c1c;
+    color: #f8dada;
+    border: 2px solid #ff6fa3;
+    border-radius: 12px;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 0 15px #ff6fa3a8;
+    text-align: left;
+    white-space: pre-wrap;
+    line-height: 1.5;
+  }
+  #alertBox button {
+    background: #ff6fa3;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    margin-top: 12px;
+    cursor: pointer;
+  }
+  #alertBox button:hover {
+    background: #ff85b2;
+  }
+</style>
+
+
 
 
   <style>
@@ -78,7 +117,7 @@
     a{color:var(--pink);}
     .center{text-align:center;}
     .muted{color:var(--muted);font-size:0.95em;}
-    .btn{background:linear-gradient(90deg,var(--pink),var(--pink-2));color:#fff;padding:0.55em 1.1em;border:none;border-radius:12px;cursor:pointer;font-weight:600;box-shadow:0 6px 18px rgba(255,107,129,0.12);transition:transform .12s ease,box-shadow .12s ease;}
+    .btn{background:linear-gradient(90deg,var(--pink),var(--pink-2));Color:#fff;padding:0.55em 1.1em;border:none;border-radius:12px;cursor:pointer;font-weight:600;box-shadow:0 6px 18px rgba(255,107,129,0.12);transition:transform .12s ease,box-shadow .12s ease;}
     .btn:active{transform:translateY(1px)}
     .btn[disabled]{opacity:0.6;cursor:not-allowed}
     .card{background:var(--card-bg);padding:1.2em;border-radius:16px;box-shadow:var(--accent-shadow);backdrop-filter: blur(6px);border:1px solid rgba(255,255,255,0.02);margin-bottom:1em;}
@@ -89,7 +128,7 @@
     .small {font-size:0.9em;}
     /* Lightbox/modal */
     #modal {position:fixed;inset:0;background:rgba(6,0,18,0.66);display:none;align-items:center;justify-content:center;z-index:9999;padding:20px;}
-    #modalImg{max-width:92vw;max-height:87vh;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,0.6);}
+    #modalImg{max-width:92vw;max-height:87vh;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,0.6);object-fit:contain;}
     /* Wheel modal */
     #wheelModal {position:fixed;inset:0;background:rgba(0,0,0,0.55);display:none;align-items:center;justify-content:center;z-index:10005;padding:20px;}
     #wheelWrap {background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:1em;border-radius:12px;text-align:center;max-width:420px;width:100%;}
@@ -102,9 +141,25 @@
     #revealMsg {position:relative;margin-top:10px;color:#ffdede;font-weight:700;min-height:22px;}
     /* Gift poem */
     .love-poem { font-family: 'Great Vibes', cursive; font-size:1.12rem; line-height:1.55; background: linear-gradient(45deg, #ff6b81, #ffd166); -webkit-background-clip: text; -webkit-text-fill-color: transparent; color: transparent; text-shadow: 0 2px 8px rgba(255,107,129,0.18); }
-    /* gallery */
-    .gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-    .gallery-grid img{width:100%;height:120px;object-fit:cover;border-radius:10px;box-shadow:0 6px 20px rgba(0,0,0,0.5);cursor:pointer;transition:transform .16s ease}
+    /* gallery (FIXED) - keep image aspect ratio and avoid cropping */
+    .gallery-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:10px;
+      align-items:start;
+    }
+    .gallery-grid img{
+      width:100%;
+      height:auto;            /* preserve natural aspect ratio */
+      max-height:450px;       /* limit very tall images */
+      object-fit:contain;     /* do not crop; show whole image */
+      border-radius:10px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.5);
+      cursor:pointer;
+      transition:transform .16s ease;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); /* subtle background for images with transparent edges */
+      display:block;
+    }
     .gallery-grid img:hover{transform:translateY(-6px)}
     /* responsive */
     .margin-top-small {
@@ -137,9 +192,6 @@
     <h1 style="font-size:3.2rem;line-height:1;">Happy Birthday, Love ❤️</h1>
     <p class="muted" style="margin-top:6px;font-size:1.05rem">Today is all about you! Enjoy games, stories, surprises, and more!</p>
   </div>
-
-   
-  
 
   <script>
   function createFlower() {
@@ -318,8 +370,6 @@ drawCake();
     <h2 style="font-size:3.2rem">Surprise Gift Box</h2>
     <div class="center">
       <button id="giftBoxBtn" onclick="openGift()">🎁</button>
-       
-
     </div>
     <div id="giftMsg" class="love-poem" style="display:none;margin-top:1em;">
       <p1>💖 [Tere Naam, Anju] 💖</p1 bold>
@@ -363,15 +413,18 @@ drawCake();
   ).join('');
   </script>
 
-  <div class="section card center" style="max-width:980px;margin:1.2em auto;">
-    <h2 style="font-size:1.6rem">Gallery</h2>
-    <div class="gallery-grid" id="gallery" style="margin-top:12px;">
-      <img src="https://lh3.googleusercontent.com/d/1U1pPz1DM7kE2sLVEm5DWYllHR2qqLyug" alt="Anjali's photo" data-src="https://lh3.googleusercontent.com/d/1U1pPz1DM7kE2sLVEm5DWYllHR2qqLyug">
-      <img src="images/photo2.jpg" alt="photo2" data-src="images/photo2.jpg">
-      <img src="images/photo3.jpg" alt="photo3" data-src="images/photo3.jpg">
-    </div>
-  </div>
+<div class="section card center" style="margin:1.5em auto;">
+  <h2 style="font-size:1.8rem; margin-bottom:0.8em;">Gallery</h2>
 
+  <div class="gallery-grid" id="gallery">
+    <img src="https://lh3.googleusercontent.com/d/1U1pPz1DM7kE2sLVEm5DWYllHR2qqLyug" 
+         alt="Anjali's photo">
+    <img src="https://lh3.googleusercontent.com/d/1soxpHKiUV0FRds-7pRWeRh_BgIvs3QAx" 
+         alt="Anjali's photo">
+    <img src="https://lh3.googleusercontent.com/d/1rHQtvEDMlrGTG8NiIcZBCR4Ns0Ji3jdN" 
+         alt="Anjali's photo">
+  </div>
+</div>
   <div id="modal"><img id="modalImg" src=""></div>
   <script>
   const modal = document.getElementById('modal');
@@ -501,13 +554,13 @@ drawCake();
 
   <script>
   let heartsMsg=[
-    'I love your smile more than anything.',
-    'You are my Babu ❤️',
+    'I love you my Love ❤️.',
+    'You are my Bubu ❤️',
     'Thank you for everything.',
-    'Can’t wait for our next adventure.',
+    'Can’t wait for our Biyah',
     'You light up my world.',
-    "Here's to the best year yet!",
-    "Wishing you endless happiness."
+    "Hmesha khush raho. Roya kam kro.",
+    "Wishing you endless happiness. Khush raho. Jaldi se suhagan ho jao.",
   ];
   function makeHearts(){
     const wrap = document.getElementById('heartsWrap');
@@ -567,7 +620,7 @@ drawCake();
   </div>
 
   <script>
-  const fullLetter=`My dearest Anjali,\n\nMay every wish come true.\nFrom fun chats, first calls, to today—your presence is my joy.\n\nHappy birthday, Babu. Always yours,\nAdi.`;
+  const fullLetter=`Hey My Love ❤️,\n\nhappy Birthday to you❤️ .\nFrom fun chats, first calls, to today—your presence is my joy.\n\nKhush rho. Kam ladai kiya kro.\n\n Hope is saal good new mile hame ❤️. \n\n Ham dono jaldi se ek ho jaye.\n\n Best Wishesh from you love❤️.`;
   document.getElementById('revealLetterBtn').addEventListener('click', ()=>{
     const letterText = document.getElementById('letterText');
     letterText.textContent='';
@@ -595,7 +648,7 @@ drawCake();
   <div id="wheelModal"><div id="wheelWrap"><canvas id="wheelCanvas" width="360" height="360"></canvas><div style="margin-top:10px;"><button class="btn" id="doSpin">Spin</button> <button class="btn" id="closeWheel">Close</button></div></div></div>
 
   <script>
-  function showJoke(){alert("Why do birthday candles love parties? They get to go out in style!");}
+  function showJoke(){alert("Anjali: Adi, why do you keep asking me to send photos every day?\n\nAdi:Because my phone gallery feels lonely without a new Anjali update! 😜\n\n”Anjali: So basically, I’m your daily wallpaper change?\n\nAdi: “Exactly. Dynamic, beautiful, and battery-draining sometimes.” ❤️📱");}
   function partyMode(){
     document.body.style.background='linear-gradient(90deg,#ffd166 60%, #ff6b81 100%)';
     confettiBurst();flowerRainStart();
@@ -699,8 +752,7 @@ drawCake();
     <h2 style="font-size:1.6rem">With Love and Care from Your Love</h2>
     <div style="margin-top:10px;">
       <button class="btn" onclick="alert('You are present and loved!')">I’m Here 🎉</button>
-      <a class="btn" href="https://wa.me/?text=Happy%20Birthday%20Anjali%21" target="_blank" style="margin-left:8px;">Share on WhatsApp</a>
-    </div>
+      </div>
   </div>
 
   <!-- Confetti Animation JS -->
@@ -715,3 +767,17 @@ drawCake();
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
